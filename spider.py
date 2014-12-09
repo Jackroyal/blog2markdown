@@ -5,6 +5,7 @@
 from bs4 import BeautifulSoup as bs
 import urllib2 , re , random , Queue
 import sys
+from ParseBlog import ParseBlog
 
 # print sys.getdefaultencoding()
 class CsdnSpider:
@@ -39,7 +40,7 @@ class CsdnSpider:
 class BlogSpider:
     """docstring for BlogSpider"""
     qu = Queue.Queue()
-    totalNum = 0   #文章总次数
+    totalNum = 0   #文章总数目
     runNum = 0     #程序执行次数
     flag = 0       #程序游标
     url_list = []   #url_list地址列表
@@ -47,8 +48,10 @@ class BlogSpider:
     def __init__(self, url):
         self.url = url
         self.spider = CsdnSpider(self.url)
-        self.setNum()#设定循环次数和总文章数目
-        self.getList()
+        self.setNum()   #设定循环次数和总文章数目
+        self.getList()  #获取所有的博客地址和文章标题
+        print "列表抓取成功，总共获取%d篇文章" % BlogSpider.totalNum
+        self.parseBlog()
 
 
     def setNum(self):
@@ -60,15 +63,36 @@ class BlogSpider:
 
     def getList(self):
         if BlogSpider.runNum != 0:
-            listarr = self.spider.soup.find('div', class_="list_item_new").find_all('span',class_="link_title")
-            for ite in listarr:
-                BlogSpider.url_list.append((ite.find('a').get_text().strip(), BlogSpider.url_prefix+ite.find('a').get('href')))
-            if BlogSpider.runNum>1:
-                for x in xrange(1,BlogSpider.runNum):
-                    pass
+            self.parseUrlList()
+        if BlogSpider.runNum > 1:
+            for x in xrange(2,BlogSpider.runNum+1):
+                print "http://blog.csdn.net/yangzhenping/article/list/" + str(x) +"?viewmode=contents"
+                print len(BlogSpider.url_list)
+                #此处添加?viewmode=contents可以使每页读取更多的列表，每页50条，不使用这个，每页只能读取20条
+                self.spider = CsdnSpider("http://blog.csdn.net/yangzhenping/article/list/" + str(x) +"?viewmode=contents")
+                self.parseUrlList()
+            print "now x is %d" % x
+            print len(BlogSpider.url_list)
+
 
         elif BlogSpider.runNum == 0:
-            pass
+            return
+    def parseUrlList(self):
+        listarr = self.spider.soup.find('div', class_="list_item_new").find_all('span',class_="link_title")
+        print "list arr is %d" % len(listarr)
+        for ite in listarr:
+            BlogSpider.url_list.append((ite.find('a').get_text().strip(), BlogSpider.url_prefix+ite.find('a').get('href')))
+
+    def parseBlog(self):
+        if len(BlogSpider.url_list) > 0:
+            for x in BlogSpider.url_list:
+                print BlogSpider.url_prefix + x[1]
+                self.spider = CsdnSpider(x[1])
+                print self.spider.soup.title
+                self.parse = ParseBlog(self.spider.soup)
+        else:
+            print "博客列表为空，可是列表抓取失败或者新博客无内容"
+
 
     def hasNext(self):
         pass
@@ -95,6 +119,6 @@ class BlogSpider:
 if __name__ == '__main__':
     url = "http://blog.csdn.net/yangzhenping?viewmode=contents"
     blog = BlogSpider(url)
-    print blog.url_list
-    print BlogSpider.url_list
+    #print blog.url_list
+    #print BlogSpider.url_list
     #print blog.soup.title

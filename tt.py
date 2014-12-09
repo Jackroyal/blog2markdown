@@ -1,6 +1,8 @@
 from bs4 import BeautifulSoup as bs
 import urllib2, re, random, Queue
 
+
+url_list = []
 user_agents = [
             'Mozilla/5.0 (Windows; U; Windows NT 5.1; it; rv:1.8.1.11) Gecko/20071127 Firefox/2.0.0.11',
             'Opera/9.25 (Windows NT 5.1; U; en)',
@@ -11,9 +13,10 @@ user_agents = [
             "Mozilla/5.0 (X11; Linux i686) AppleWebKit/535.7 (KHTML, like Gecko) Ubuntu/11.04 Chromium/16.0.912.77 Chrome/16.0.912.77 Safari/535.7",
             "Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:10.0) Gecko/20100101 Firefox/10.0 ",
            ]
-url = 'http://blog.csdn.net/yangzhenping?viewmode=contents'
-req = urllib2.Request('http://blog.csdn.net/yangzhenping?viewmode=contents')
-agent = random.choice(user_agents)
+url = 'http://blog.csdn.net/yangzhenping/article/list/2?viewmode=contents'
+req = urllib2.Request(url)
+# agent = random.choice(user_agents)
+agent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2236.0 Safari/537.36'
 req.add_header('User-Agent',agent)
 req.add_header('Host','blog.csdn.net')
 req.add_header('Accept','*/*')
@@ -26,3 +29,6 @@ soup = bs(response.read())
 listarr = soup.find('div', class_="list_item_new").find_all('span',class_="link_title")
 for ite in listarr:
     url_list.append((ite.find('a').get_text(),ite.find('a').get('href')))
+
+
+print len(listarr)
