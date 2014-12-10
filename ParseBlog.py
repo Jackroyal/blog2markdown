@@ -9,6 +9,7 @@ class ParseBlog:
     """docstring for ParseBlog"""
     def __init__(self, soup):
         print type(soup)
+        self.nodeList = []
         self.soup = soup
         print type(self.soup)
         print (self.soup.find('span', class_="link_categories"))
@@ -46,16 +47,6 @@ class ParseBlog:
         f = file('conten.txt', 'w')
         f.write(str(content))
         f.close()
-        contentTag = content.find_all('a')  #获取所有article_content里面的子标签
-        self.parseHTML(contentTag)
-        contentTag = content.find_all('img')  #获取所有article_content里面的子标签
-        self.parseHTML(contentTag)
-        contentTag = content.find_all('p')  #获取所有article_content里面的子标签
-        self.parseHTML(contentTag)
-        contentTag = content.find_all('span')  #获取所有article_content里面的子标签
-        self.parseHTML(contentTag)
-        contentTag = content.find_all('pre')  #获取所有article_content里面的子标签
-        self.parseHTML(contentTag)
         contentTag = content.find_all()  #获取所有article_content里面的子标签
 
         f = file('contentTag.txt', 'w')
@@ -63,6 +54,13 @@ class ParseBlog:
         f.close()
 
         return content
+    def parseNode(self, content):
+
+        if len(content.contents) == 1:
+            self.nodeList.insert(0,content.contents[0])
+        else:
+            for x in content.contents:
+                parseNode(x)
 
     def parseHTML(self,contentTag):
         for item in contentTag:

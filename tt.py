@@ -14,7 +14,8 @@ user_agents = [
             "Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:10.0) Gecko/20100101 Firefox/10.0 ",
             ]
 # url = 'http://blog.csdn.net/yangzhenping/article/list/2?viewmode=contents'
-url = 'http://blog.csdn.net/yangzhenping/article/details/41744531'
+url = 'http://blog.csdn.net/yangzhenping/article/details/41079223'
+# url = 'http://blog.csdn.net/yangzhenping/article/details/41744531'
 req = urllib2.Request(url)
 # agent = random.choice(user_agents)
 agent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2236.0 Safari/537.36'
@@ -29,7 +30,21 @@ bb = soup.find('div', class_="article_content")
 
 print re.match('<p>\s*</p>',(str(bb.p)).decode("utf-8"))
 <p> </p>
+nodeList = []
+def parseNode(content):
+    try:
+        print content
+        print len(content.contents)
+    except:
+        if content.parent.contents[0] != bb:
+            nodeList.insert(0,content.parent)
+    else:
+        for x in content.children:
+            parseNode(x)
 
+f = file('nodelist.txt', 'w')
+f.write(''.join([(lambda s : s +'\n')(unicode(x)) for x in nodeList]))
+f.close()
 # listarr = soup.find('div', class_="list_item_new").find_all('span',class_="link_title")
 # for ite in listarr:
 #     url_list.append((ite.find('a').get_text(),ite.find('a').get('href')))
