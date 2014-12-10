@@ -3,10 +3,7 @@
 # Filename: ParseBlog.py
 
 from bs4 import BeautifulSoup as bs
-<<<<<<< HEAD
 import re
-=======
->>>>>>> 3098b0aebda7d0e530bde939a8b9f83d359c9d7a
 
 class ParseBlog:
     """docstring for ParseBlog"""
@@ -20,17 +17,13 @@ class ParseBlog:
         self.category = self.setCategory()
         self.tag = self.setTag()
         self.content = self.setContent()
-<<<<<<< HEAD
         self.save2md()
-=======
->>>>>>> 3098b0aebda7d0e530bde939a8b9f83d359c9d7a
 
     def setTitle(self):
         return (self.soup.find('span', class_="link_title").get_text()).strip()
     def setTime(self):
         return (self.soup.find('span', class_="link_postdate").get_text()).strip()
     def setCategory(self):
-<<<<<<< HEAD
         category = []
         try:
             categoryList = self.soup.find('span', class_="link_categories").find_all('a')
@@ -134,19 +127,3 @@ class ParseBlog:
         f.write(str(self.content))
         f.close()
         print 'save complite---------------------------------------'
-=======
-        try:
-            category = (self.soup.find('span', class_="link_categories").get_text()).strip()
-        except:
-            category = ''
-        return category
-    def setTag(self):
-        try:
-            tag = (self.soup.find('div', class_="tag2box").get_text()).strip()
-        except:
-            tag = ''
-        return tag
-    def setContent(self):
-        return (self.soup.find('div', class_="article_content").get_text()).strip()
-
->>>>>>> 3098b0aebda7d0e530bde939a8b9f83d359c9d7a

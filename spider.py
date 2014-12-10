@@ -47,18 +47,11 @@ class BlogSpider:
     url_prefix = "http://blog.csdn.net"   #网址前缀
     def __init__(self, url):
         self.url = url
-<<<<<<< HEAD
         # self.spider = CsdnSpider(self.url)
         # self.setNum()   #设定循环次数和总文章数目
         # self.getList()  #获取所有的博客地址和文章标题
         # print "列表抓取成功，总共获取%d篇文章" % BlogSpider.totalNum
         BlogSpider.url_list = [('建立HBase的集群和HDInsight在Hadoop中使用Hive来查询它们' , 'http://blog.csdn.net/yangzhenping/article/details/41079223')]
-=======
-        self.spider = CsdnSpider(self.url)
-        self.setNum()   #设定循环次数和总文章数目
-        self.getList()  #获取所有的博客地址和文章标题
-        print "列表抓取成功，总共获取%d篇文章" % BlogSpider.totalNum
->>>>>>> 3098b0aebda7d0e530bde939a8b9f83d359c9d7a
         self.parseBlog()
 
 
@@ -66,11 +59,8 @@ class BlogSpider:
         str_total = self.spider.soup.find('div', class_="pagelist").find('span').get_text()
         pattern = re.compile('^\s+([\d]+)[\D]+?([\d]+)[\D]+')
         match = pattern.findall(str_total)  #match = [(u'370', u'8')]
-<<<<<<< HEAD
         # BlogSpider.totalNum = 1
         # BlogSpider.runNum = 1
-=======
->>>>>>> 3098b0aebda7d0e530bde939a8b9f83d359c9d7a
         BlogSpider.totalNum = int(match[0][0])
         BlogSpider.runNum = int(match[0][1])
 

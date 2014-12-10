@@ -12,14 +12,9 @@ user_agents = [
             'Lynx/2.8.5rel.1 libwww-FM/2.14 SSL-MM/1.4.1 GNUTLS/1.2.9',
             "Mozilla/5.0 (X11; Linux i686) AppleWebKit/535.7 (KHTML, like Gecko) Ubuntu/11.04 Chromium/16.0.912.77 Chrome/16.0.912.77 Safari/535.7",
             "Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:10.0) Gecko/20100101 Firefox/10.0 ",
-<<<<<<< HEAD
             ]
 # url = 'http://blog.csdn.net/yangzhenping/article/list/2?viewmode=contents'
 url = 'http://blog.csdn.net/yangzhenping/article/details/41744531'
-=======
-           ]
-url = 'http://blog.csdn.net/yangzhenping/article/list/2?viewmode=contents'
->>>>>>> 3098b0aebda7d0e530bde939a8b9f83d359c9d7a
 req = urllib2.Request(url)
 # agent = random.choice(user_agents)
 agent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2236.0 Safari/537.36'
@@ -30,7 +25,6 @@ req.add_header('Referer',url)
 req.add_header('GET',url)
 response = urllib2.urlopen(req)
 soup = bs(response.read())
-<<<<<<< HEAD
 bb = soup.find('div', class_="article_content")
 
 print re.match('<p>\s*</p>',(str(bb.p)).decode("utf-8"))
@@ -42,13 +36,3 @@ print re.match('<p>\s*</p>',(str(bb.p)).decode("utf-8"))
 
 
 # print len(listarr)
-=======
-
-
-listarr = soup.find('div', class_="list_item_new").find_all('span',class_="link_title")
-for ite in listarr:
-    url_list.append((ite.find('a').get_text(),ite.find('a').get('href')))
-
-
-print len(listarr)
->>>>>>> 3098b0aebda7d0e530bde939a8b9f83d359c9d7a
