@@ -1,5 +1,6 @@
 blog2markdown
 用来实现普通blog到markdown的搬家，自动将blog的html转换成HEXO可用的Markdown格式
+暂时只做了CSDN
 
 UPDATE:
 2014-12-10 实现CSDN的抓取，正在实现parse解析过程
