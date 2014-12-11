@@ -1,3 +1,125 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<script charset="utf-8" src="http://csdnimg.cn/pubfooter/js/tracking.js" type="text/javascript"></script>
+<script type="text/javascript">
+        var protocol = window.location.protocol;
+        document.write('<script type="text/javascript" src="' + protocol + '//csdnimg.cn/pubfooter/js/repoAddr2.js?v=' + Math.random() + '"></' + 'script>');
+    </script>
+<script charset="utf-8" id="allmobilize" src="http://a.yunshipei.com/46aae4d1e2371e4aa769798941cef698/allmobilize.min.js"></script>
+<meta content="no-siteapp" http-equiv="Cache-Control"/><link href="#" media="handheld" rel="alternate"/>
+<title>建立HBase的集群和HDInsight在Hadoop中使用Hive来查询它们 - 每一天都有新的希望
+        - 博客频道 - CSDN.NET</title>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="建立HBase的集群和HDInsight在Hadoop中使用Hive来查询它们在本教程中，您将学习如何创建和查询HDInsight使用HiveHadoop的HBase的表。下列步骤描述：•如何使用提供在Azure门户的HBase的集群。•如何启用和使用RDP访问HBase的外壳，并使用HBase的外壳创建HBase的示例表，添加行，然后列出表中的行。•如何创建一个Hive表映射到一个现有的HBase的表，使用HiveQL查询数据在HBase的表。•如何使用Microsoft HBase的REST客户端库.NET创建一个新的HBase的表，列出您帐户中的HBase的表，以及如何从表添加和检索行。" name="description"/>
+<script src="http://static.blog.csdn.net/scripts/jquery.js" type="text/javascript"></script>
+<script src="http://static.blog.csdn.net/scripts/ad.js?v=1.1" type="text/javascript"></script>
+<!--new top-->
+<link href="http://static.csdn.net/public/common/toolbar/css/index.css" rel="stylesheet"/> <!--new top-->
+<link href="http://static.blog.csdn.net/skin/default/css/style.css?v=1.1" rel="Stylesheet" type="text/css"/>
+<link href="/yangzhenping/rss/list" id="RSSLink" rel="alternate" title="RSS" type="application/rss+xml"/>
+<link href="http://csdnimg.cn/public/favicon.ico" rel="shortcut icon"/>
+<link href="http://static.blog.csdn.net/scripts/SyntaxHighlighter/styles/default.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<!--new top-->
+<script fixed="true" id="toolbar-tpl-scriptId" prod="blog" skin="black" src="http://static.csdn.net/public/common/toolbar/js/html.js" type="text/javascript"></script>
+<!--new top-->
+<div id="container">
+<div id="header">
+<div class="header">
+<div id="blog_title">
+<h2>
+<a href="http://blog.csdn.net/yangzhenping">每一天都有新的希望</a></h2>
+<h3>雕像重生</h3>
+<div class="clear">
+</div>
+</div>
+<div class="clear">
+</div>
+</div>
+</div>
+<div id="navigator">
+<div class="navigator_bg">
+</div>
+<div class="navigator">
+<ul>
+<li id="btnContents"><a href="http://blog.csdn.net/yangzhenping?viewmode=contents"><span onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_mulu'])">
+<img src="http://static.blog.csdn.net/images/ico_list.gif"/>目录视图</span></a></li>
+<li id="btnView"><a href="http://blog.csdn.net/yangzhenping?viewmode=list"><span onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_zhaiyao'])">
+<img src="http://static.blog.csdn.net/images/ico_summary.gif"/>摘要视图</span></a></li>
+<li id="btnRss"><a href="http://blog.csdn.net/yangzhenping/rss/list"><span onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_RSS'])">
+<img src="http://static.blog.csdn.net/images/ico_rss.gif"/>订阅</span></a></li>
+</ul>
+</div>
+</div>
+<script type="text/javascript">
+    var username = "yangzhenping";
+    var _blogger = username;
+    var blog_address = "http://blog.csdn.net/yangzhenping";
+    var static_host = "http://static.blog.csdn.net";
+    var currentUserName = "";  
+</script>
+<div id="body">
+<div id="main">
+<div class="main">
+<div class="ad_class">
+<div class="notice tracking-ad" data-mod="popu_3">
+<a href="http://bbs.csdn.net/topics/390812950?page=5#post-398523062" target="_blank">
+<font color="blue">博客专家福利
+</font></a>
+   
+
+<a href="http://blog.csdn.net/csdnproduct/article/details/41806091">
+<font color="red">C币兑换平台上线</font></a>
+
+    
+
+<a href="http://blog.csdn.net/blogdevteam/article/details/41079173">
+<font color="blue">10月推荐文章汇总
+</font></a>
+    
+
+<a href="http://blog.csdn.net/blogdevteam/article/details/41842837">
+<font color="red">有奖征文--我亲历的京东发展史
+</font></a>
+    
+
+
+
+</div> </div>
+<link href="http://static.blog.csdn.net/css/comment1.css" rel="stylesheet" type="text/css"/>
+<link href="http://static.blog.csdn.net/css/style1.css" rel="stylesheet" type="text/css"/>
+<script language="JavaScript" src="http://download.csdn.net/js/jquery.cookie.js" type="text/javascript"></script>
+<script src="http://csdnimg.cn/rabbit/search-service/main.js" type="text/javascript"></script>
+<script type="text/ecmascript">
+      window.quickReplyflag = true;
+    </script>
+<div class="details" id="article_details">
+<div class="article_title">
+<span class="ico ico_type_Translated"></span>
+<h1>
+<span class="link_title"><a href="/yangzhenping/article/details/41079223">
+        建立HBase的集群和HDInsight在Hadoop中使用Hive来查询它们
+        </a></span>
+</h1>
+</div>
+<div class="article_manage">
+<span class="link_categories">
+        分类：
+            <a href="/yangzhenping/article/category/2700209" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_fenlei']);">Hadoop</a>
+<a href="/yangzhenping/article/category/2700207" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_fenlei']);">HDInsight</a>
+<a href="/yangzhenping/article/category/2700315" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_fenlei']);">HBase</a>
+<a href="/yangzhenping/article/category/2700217" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_fenlei']);">Hive</a>
+</span>
+<span class="link_postdate">2014-11-13 15:19</span>
+<span class="link_view" title="阅读次数">462人阅读</span>
+<span class="link_comments" title="评论次数"><a href="#comments" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_pinglun'])">评论</a>(0)</span>
+<span class="link_collect"><a href="javascript:void(0);" onclick="javascript:_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_shoucang']);collectArticle('建立HBase的集群和HDInsight在Hadoop中使用Hive来查询它们','41079223');return false;" title="收藏">收藏</a></span>
+<span class="link_report"><a href="#report" onclick="javascript:_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_jubao']);report(41079223,2);return false;" title="举报">举报</a></span>
+</div>
+<div class="tag2box"><a href="http://www.csdn.net/tag/hive" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_tag']);" target="_blank">hive</a><a href="http://www.csdn.net/tag/hbase" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_tag']);" target="_blank">hbase</a><a href="http://www.csdn.net/tag/yarn" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_tag']);" target="_blank">yarn</a><a href="http://www.csdn.net/tag/azure" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_tag']);" target="_blank">azure</a><a href="http://www.csdn.net/tag/%e5%a4%a7%e6%95%b0%e6%8d%ae" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_tag']);" target="_blank">大数据</a></div>
+
 <p>建立HBase的集群和HDInsight在Hadoop中使用Hive来查询它们</p><span class="alt-edited"></span><p>
 在本教程中，您将学习如何创建和查询HDInsight使用HiveHadoop的HBase的表。下列步骤描述：
 •如何使用提供在Azure门户的HBase的集群。
@@ -187,3 +309,742 @@ while ((next = client.ScannerGetNext(scannerInfo)) != null)
 <a href="http://azure.microsoft.com/en-us/documentation/articles/hdinsight-hbase-analyze-twitter-sentiment/" target="_blank">感悟</a>：学习如何做在HDInsight的Hadoop集群使用HBase的大数据的实时<a href="http://en.wikipedia.org/wiki/Sentiment_analysis" target="_blank">情感分析</a>。</p><p>本文翻译自Microsoft Azure：
 [http://azure.microsoft.com/en-us/documentation/articles/hdinsight-hbase-get-started/](http://azure.microsoft.com/en-us/documentation/articles/hdinsight-hbase-get-started/)
 </p><p> </p>
+
+<!-- Baidu Button BEGIN -->
+<div class="bdsharebuttonbox" style="float: right;">
+<a class="bds_more" data-cmd="more" href="#" style="background-position:0 0 !important; background-image: url(http://bdimg.share.baidu.com/static/api/img/share/icons_0_16.png?v=d754dcc0.png) !important"></a>
+<a class="bds_qzone" data-cmd="qzone" href="#" style="background-position:0 -52px !important" title="分享到QQ空间"></a>
+<a class="bds_tsina" data-cmd="tsina" href="#" style="background-position:0 -104px !important" title="分享到新浪微博"></a>
+<a class="bds_tqq" data-cmd="tqq" href="#" style="background-position:0 -260px !important" title="分享到腾讯微博"></a>
+<a class="bds_renren" data-cmd="renren" href="#" style="background-position:0 -208px !important" title="分享到人人网"></a>
+<a class="bds_weixin" data-cmd="weixin" href="#" style="background-position:0 -1612px !important" title="分享到微信"></a>
+</div>
+<script>window._bd_share_config = { "common": { "bdSnsKey": {}, "bdText": "", "bdMini": "1", "bdMiniList": false, "bdPic": "", "bdStyle": "0", "bdSize": "16" }, "share": {} }; with (document) 0[(getElementsByTagName('head')[0] || body).appendChild(createElement('script')).src = 'http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion=' + ~(-new Date() / 36e5)];</script>
+<!-- Baidu Button END -->
+<!--192.168.100.35-->
+<ul class="article_next_prev">
+<li class="prev_article"><span onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_shangyipian']);location.href='/yangzhenping/article/details/41079065';">上一篇</span><a href="/yangzhenping/article/details/41079065" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_shangyipian'])">有人试图登录我的账号5次！</a></li>
+<li class="next_article"><span onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_xiayipian']);location.href='/yangzhenping/article/details/41212101';">下一篇</span><a href="/yangzhenping/article/details/41212101" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_xiayipian'])">分享下今天研究的流量上限DDos攻击分析和解决方案</a></li>
+</ul>
+<!-- Baidu Button BEGIN -->
+<script data="type=tools&amp;uid=1536434" id="bdshare_js" type="text/javascript"></script>
+<script id="bdshell_js" type="text/javascript"></script>
+<script type="text/javascript">
+    document.getElementById("bdshell_js").src = "http://bdimg.share.baidu.com/static/js/shell_v2.js?cdnversion=" + Math.ceil(new Date()/3600000)
+</script>
+<!-- Baidu Button END -->
+<div articleid="41079223" id="digg">
+<dl class="digg digg_disable" id="btnDigg">
+<dt onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_ding'])">顶</dt>
+<dd>0</dd>
+</dl>
+<dl class="digg digg_disable" id="btnBury">
+<dt onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_cai'])">踩</dt>
+<dd>0</dd>
+</dl>
+</div>
+</div>
+<dl class="blog-associat-tag">
+<dt>主题推荐</dt>
+<dd>
+<a class="blog-tage-red" href="http://www.csdn.net/tag/hadoop" target="_blank">hadoop</a>
+<a class="blog-tage-red" href="http://www.csdn.net/tag/集群" target="_blank">集群</a>
+<a class="blog-tage-red" href="http://www.csdn.net/tag/hive" target="_blank">hive</a>
+<a class="blog-tage-red" href="http://www.csdn.net/tag/hadoop集群" target="_blank">hadoop集群</a>
+<a class="blog-tage-red" href="http://www.csdn.net/tag/解决方案" target="_blank">解决方案</a>
+</dd>
+</dl>
+<dl class="blog-ass-articl tracking-ad" data-mod="popu_36" id="res-relatived">
+<dt><span>猜你在找</span></dt>
+</dl>
+<script type="text/javascript">
+    var searchtitletags = '建立HBase的集群和HDInsight在Hadoop中使用Hive来查询它们' + ',' + 'hadoop,集群,hive,hadoop集群,解决方案';
+    searchService({
+        index: 'blog',
+        query: searchtitletags,
+        from: 10,
+        size: 10,
+        appendTo: '#res-relatived',
+        url: 'recommend',
+        his: 2,
+        client: "blog_cf_enhance",
+        tmpl: '<dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px;"><a href="#{ url }" title="#{ title }" strategy="#{ strategy }">#{ title }</a></dd>'
+    });
+
+ </script>
+<div id="ad_cen">
+<script type="text/javascript">
+              new Ad(4, 'ad_cen');
+          </script>
+</div>
+<div class="comment_class">
+<div class="panel_head" id="comment_title">
+<span class="see_comment">查看评论</span><a name="comments"></a></div>
+<div id="comment_list">
+</div>
+<div id="comment_bar">
+</div>
+<div id="comment_form">
+</div>
+<div class="announce">
+        * 以上用户言论只代表其个人观点，不代表CSDN网站的观点或立场<a name="reply"></a><a name="quote"></a></div>
+</div>
+<script type="text/javascript">
+    var fileName = '41079223';
+    var commentscount = 0;
+    var islock = false
+</script>
+<script src="http://static.blog.csdn.net/scripts/comment.js" type="text/javascript"></script>
+<div id="ad_bot">
+</div>
+<script type="text/javascript">
+    new Ad(5, 'ad_bot');
+    </script>
+<div id="report_dialog">
+</div>
+<div id="d-top" style="bottom:60px;">
+<a class="btn btn-top q-reply" id="quick-reply" style="display:none;" title="快速回复">
+<img alt="快速回复" src="http://static.blog.csdn.net/images/blog-icon-reply.png"/>
+</a>
+<a class="btn btn-top backtop" id="d-top-a" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_huidaodingbu'])" style="display: none;" title="返回顶部">
+<img alt="TOP" src="http://static.blog.csdn.net/images/top.png"/>
+</a>
+</div>
+<script type="text/javascript">
+    $(function ()
+    {
+        $("#ad_frm_0").height("90px");
+        
+        setTimeout(function(){
+            $("#ad_frm_2").height("200px");
+        },1000);
+        
+        /*
+        if($("#comment_content").length>0)
+        {
+            $("#quick-reply").show();
+
+            $("#quick-reply").click(function(){
+                setEditorFocus();
+            });
+        }       
+     
+        var d_top = $('#d-top-a');
+
+        document.onscroll = function ()
+        {
+            var scrTop = (document.body.scrollTop || document.documentElement.scrollTop);
+            if (scrTop > 500)
+            {
+                d_top.show();
+            } else
+            {
+                d_top.hide();
+            }
+        }
+        $('#d-top-a').click(function ()
+        {
+            scrollTo(0, 0);
+            this.blur();
+            return false;
+        });
+        */
+    });
+  
+</script>
+<style type="text/css">
+    .tag_list
+    {
+        background: none repeat scroll 0 0 #FFFFFF;
+        border: 1px solid #D7CBC1;
+        color: #000000;
+        font-size: 12px;
+        line-height: 20px;
+        list-style: none outside none;
+        margin: 10px 2% 0 1%;
+        padding: 1px;
+    }
+    .tag_list h5
+    {
+        background: none repeat scroll 0 0 #E0DBD3;
+        color: #47381C;
+        font-size: 12px;
+        height: 24px;
+        line-height: 24px;
+        padding: 0 5px;
+        margin: 0;
+    }
+    .tag_list h5 a
+    {
+        color: #47381C;
+    }
+    .classify
+    {
+        margin: 10px 0;
+        padding: 4px 12px 8px;
+    }
+    .classify a
+    {
+        margin-right: 20px;
+        white-space: nowrap;
+    }
+</style>
+<div class="tag_list">
+<h5>
+<a href="http://www.csdn.net/tag/" target="_blank">核心技术类目</a></h5>
+<div class="classify">
+<a href="http://www.csdn.net/tag" onclick="LogClickCount(this,336);" target="_blank" title="全部主题">全部主题</a>
+<a href="http://g.csdn.net/5272865" onclick="LogClickCount(this,336);" target="_blank" title="Hadoop">Hadoop</a>
+<a href="http://g.csdn.net/5272866" onclick="LogClickCount(this,336);" target="_blank" title="AWS">AWS</a>
+<a href="http://g.csdn.net/5272870" onclick="LogClickCount(this,336);" target="_blank" title="移动游戏">移动游戏</a>
+<a href="http://g.csdn.net/5272871" onclick="LogClickCount(this,336);" target="_blank" title="Java">Java</a>
+<a href="http://g.csdn.net/5272872" onclick="LogClickCount(this,336);" target="_blank" title="Android">Android</a>
+<a href="http://g.csdn.net/5272873" onclick="LogClickCount(this,336);" target="_blank" title="iOS">iOS</a>
+<a href="http://g.csdn.net/5272868" onclick="LogClickCount(this,336);" target="_blank" title="Swift">Swift</a>
+<a href="http://g.csdn.net/5272869" onclick="LogClickCount(this,336);" target="_blank" title="智能硬件">智能硬件</a>
+<a href="http://g.csdn.net/5272867" onclick="LogClickCount(this,336);" target="_blank" title="Docker">Docker</a>
+<a href="http://g.csdn.net/5272925" onclick="LogClickCount(this,336);" target="_blank" title="OpenStack">OpenStack</a>
+<a href="http://www.csdn.net/tag/vpn" onclick="LogClickCount(this,336);" target="_blank" title="VPN">VPN</a>
+<a href="http://g.csdn.net/5272924" onclick="LogClickCount(this,336);" target="_blank" title="Spark">Spark</a>
+<a href="http://www.csdn.net/tag/erp" onclick="LogClickCount(this,336);" target="_blank" title="ERP">ERP</a>
+<a href="http://www.csdn.net/tag/ie10" onclick="LogClickCount(this,336);" target="_blank" title="IE10">IE10</a>
+<a href="http://www.csdn.net/tag/eclipse" onclick="LogClickCount(this,336);" target="_blank" title="Eclipse">Eclipse</a>
+<a href="http://www.csdn.net/tag/crm" onclick="LogClickCount(this,336);" target="_blank" title="CRM">CRM</a>
+<a href="http://www.csdn.net/tag/javascript" onclick="LogClickCount(this,336);" target="_blank" title="JavaScript">JavaScript</a>
+<a href="http://www.csdn.net/tag/数据库" onclick="LogClickCount(this,336);" target="_blank" title="数据库">数据库</a>
+<a href="http://www.csdn.net/tag/ubuntu" onclick="LogClickCount(this,336);" target="_blank" title="Ubuntu">Ubuntu</a>
+<a href="http://www.csdn.net/tag/nfc" onclick="LogClickCount(this,336);" target="_blank" title="NFC">NFC</a>
+<a href="http://www.csdn.net/tag/wap" onclick="LogClickCount(this,336);" target="_blank" title="WAP">WAP</a>
+<a href="http://www.csdn.net/tag/jquery" onclick="LogClickCount(this,336);" target="_blank" title="jQuery">jQuery</a>
+<a href="http://www.csdn.net/tag/bi" onclick="LogClickCount(this,336);" target="_blank" title="BI">BI</a>
+<a href="http://www.csdn.net/tag/html5" onclick="LogClickCount(this,336);" target="_blank" title="HTML5">HTML5</a>
+<a href="http://www.csdn.net/tag/spring" onclick="LogClickCount(this,336);" target="_blank" title="Spring">Spring</a>
+<a href="http://www.csdn.net/tag/apache" onclick="LogClickCount(this,336);" target="_blank" title="Apache">Apache</a>
+<a href="http://www.csdn.net/tag/.net" onclick="LogClickCount(this,336);" target="_blank" title=".NET">.NET</a>
+<a href="http://www.csdn.net/tag/api" onclick="LogClickCount(this,336);" target="_blank" title="API">API</a>
+<a href="http://www.csdn.net/tag/html" onclick="LogClickCount(this,336);" target="_blank" title="HTML">HTML</a>
+<a href="http://www.csdn.net/tag/sdk" onclick="LogClickCount(this,336);" target="_blank" title="SDK">SDK</a>
+<a href="http://www.csdn.net/tag/iis" onclick="LogClickCount(this,336);" target="_blank" title="IIS">IIS</a>
+<a href="http://www.csdn.net/tag/fedora" onclick="LogClickCount(this,336);" target="_blank" title="Fedora">Fedora</a>
+<a href="http://www.csdn.net/tag/xml" onclick="LogClickCount(this,336);" target="_blank" title="XML">XML</a>
+<a href="http://www.csdn.net/tag/lbs" onclick="LogClickCount(this,336);" target="_blank" title="LBS">LBS</a>
+<a href="http://www.csdn.net/tag/unity" onclick="LogClickCount(this,336);" target="_blank" title="Unity">Unity</a>
+<a href="http://www.csdn.net/tag/splashtop" onclick="LogClickCount(this,336);" target="_blank" title="Splashtop">Splashtop</a>
+<a href="http://www.csdn.net/tag/uml" onclick="LogClickCount(this,336);" target="_blank" title="UML">UML</a>
+<a href="http://www.csdn.net/tag/components" onclick="LogClickCount(this,336);" target="_blank" title="components">components</a>
+<a href="http://www.csdn.net/tag/windowsmobile" onclick="LogClickCount(this,336);" target="_blank" title="Windows Mobile">Windows Mobile</a>
+<a href="http://www.csdn.net/tag/rails" onclick="LogClickCount(this,336);" target="_blank" title="Rails">Rails</a>
+<a href="http://www.csdn.net/tag/qemu" onclick="LogClickCount(this,336);" target="_blank" title="QEMU">QEMU</a>
+<a href="http://www.csdn.net/tag/kde" onclick="LogClickCount(this,336);" target="_blank" title="KDE">KDE</a>
+<a href="http://www.csdn.net/tag/cassandra" onclick="LogClickCount(this,336);" target="_blank" title="Cassandra">Cassandra</a>
+<a href="http://www.csdn.net/tag/cloudstack" onclick="LogClickCount(this,336);" target="_blank" title="CloudStack">CloudStack</a>
+<a href="http://www.csdn.net/tag/ftc" onclick="LogClickCount(this,336);" target="_blank" title="FTC">FTC</a>
+<a href="http://www.csdn.net/tag/coremail" onclick="LogClickCount(this,336);" target="_blank" title="coremail">coremail</a>
+<a href="http://www.csdn.net/tag/ophone " onclick="LogClickCount(this,336);" target="_blank" title="OPhone ">OPhone </a>
+<a href="http://www.csdn.net/tag/couchbase" onclick="LogClickCount(this,336);" target="_blank" title="CouchBase">CouchBase</a>
+<a href="http://www.csdn.net/tag/云计算" onclick="LogClickCount(this,336);" target="_blank" title="云计算">云计算</a>
+<a href="http://www.csdn.net/tag/iOS6" onclick="LogClickCount(this,336);" target="_blank" title="iOS6">iOS6</a>
+<a href="http://www.csdn.net/tag/rackspace " onclick="LogClickCount(this,336);" target="_blank" title="Rackspace ">Rackspace </a>
+<a href="http://www.csdn.net/tag/webapp" onclick="LogClickCount(this,336);" target="_blank" title="Web App">Web App</a>
+<a href="http://www.csdn.net/tag/springside" onclick="LogClickCount(this,336);" target="_blank" title="SpringSide">SpringSide</a>
+<a href="http://www.csdn.net/tag/maemo" onclick="LogClickCount(this,336);" target="_blank" title="Maemo">Maemo</a>
+<a href="http://www.csdn.net/tag/compuware" onclick="LogClickCount(this,336);" target="_blank" title="Compuware">Compuware</a>
+<a href="http://www.csdn.net/tag/大数据" onclick="LogClickCount(this,336);" target="_blank" title="大数据">大数据</a>
+<a href="http://www.csdn.net/tag/aptech" onclick="LogClickCount(this,336);" target="_blank" title="aptech">aptech</a>
+<a href="http://www.csdn.net/tag/perl" onclick="LogClickCount(this,336);" target="_blank" title="Perl">Perl</a>
+<a href="http://www.csdn.net/tag/tornado" onclick="LogClickCount(this,336);" target="_blank" title="Tornado">Tornado</a>
+<a href="http://www.csdn.net/tag/ruby" onclick="LogClickCount(this,336);" target="_blank" title="Ruby">Ruby</a>
+<a href="http://www.csdn.net/hibernate" onclick="LogClickCount(this,336);" target="_blank" title="Hibernate">Hibernate</a>
+<a href="http://www.csdn.net/tag/thinkphp" onclick="LogClickCount(this,336);" target="_blank" title="ThinkPHP">ThinkPHP</a>
+<a href="http://www.csdn.net/tag/hbase" onclick="LogClickCount(this,336);" target="_blank" title="HBase">HBase</a>
+<a href="http://www.csdn.net/tag/pure" onclick="LogClickCount(this,336);" target="_blank" title="Pure">Pure</a>
+<a href="http://www.csdn.net/tag/solr" onclick="LogClickCount(this,336);" target="_blank" title="Solr">Solr</a>
+<a href="http://www.csdn.net/tag/angular" onclick="LogClickCount(this,336);" target="_blank" title="Angular">Angular</a>
+<a href="http://www.csdn.net/tag/cloudfoundry" onclick="LogClickCount(this,336);" target="_blank" title="Cloud Foundry">Cloud Foundry</a>
+<a href="http://www.csdn.net/tag/redis" onclick="LogClickCount(this,336);" target="_blank" title="Redis">Redis</a>
+<a href="http://www.csdn.net/tag/scala" onclick="LogClickCount(this,336);" target="_blank" title="Scala">Scala</a>
+<a href="http://www.csdn.net/tag/django" onclick="LogClickCount(this,336);" target="_blank" title="Django">Django</a>
+<a href="http://www.csdn.net/tag/bootstrap" onclick="LogClickCount(this,336);" target="_blank" title="Bootstrap">Bootstrap</a>
+</div>
+</div>
+<div id="pop_win" style="display:none ;position: absolute; z-index: 10000; border: 1px solid rgb(220, 220, 220); top: 222.5px; left: 630px; opacity: 1; background: none 0px 0px repeat scroll rgb(255, 255, 255);">
+</div>
+<div id="popup_mask"></div>
+<style>
+    #popup_mask
+    {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: #000;
+        z-index: 9999;
+        left: 0px;
+        top: 0px;
+        opacity: 0.3;
+        filter: alpha(opacity=30);
+        display: none;
+    }
+
+</style>
+<script type="text/javascript">
+    $(function(){
+        setTimeout(function(){
+            $(".comment_body:contains('回复')").each(function(index,item){
+                var u=$(this).text().split('：')[0].toString().replace("回复","")
+                var thisComment=$(this);
+                if(u)
+                {
+                    $.getJSON("https://passport.csdn.net/get/nick?callback=?", {users: u}, function(a) {
+                        if(a!=null&&a.data!=null&&a.data.length>0)
+                        {
+                            nick=a.data[0].n; 
+                            if(u!=nick)
+                            {
+                                thisComment.text(thisComment.text().replace(u,nick));  
+                            }
+                        }       
+                    });  
+                }
+            });
+        },200);  
+        
+        setTimeout(function(){
+            $("a img[src='http://js.tongji.linezing.com/stats.gif']").parent().css({"position":"absolute","left":"50%"});
+        },300);
+    });
+
+    function loginbox(){
+        var $logpop=$("#pop_win");
+        $logpop.html('<iframe src="https://passport.csdn.net/account/loginbox?service=http://static.blog.csdn.net/callback.htm" frameborder="0" height="600" width="400" scrolling="no"></iframe>');
+
+        $('#popup_mask').css({
+            opacity: 0.5,
+            width: $( document ).width() + 'px',
+            height:  $( document ).height() + 'px'
+        });
+        $('#popup_mask').css("display","block");
+ 
+        $logpop.css( {
+            top: ($( window ).height() - $logpop.height())/ 2  + $( window 
+       ).scrollTop() + 'px',
+            left:($( window ).width() - $logpop.width())/ 2
+        } );
+ 
+        setTimeout( function () {
+            $logpop.show();
+            $logpop.css( {
+                opacity: 1
+            } );
+        }, 200 );
+ 
+        $('#popup_mask').unbind("click");
+        $('#popup_mask').bind("click", function(){
+            $('#popup_mask').hide();
+            var $clopop = $("#pop_win");
+            $("#common_ask_div_sc").css("display","none");
+            $clopop.css( {
+                opacity: 0
+            } );
+            setTimeout( function () {
+                $clopop.hide();
+            }, 350 );
+            return false;
+        });
+    }    
+
+</script>
+<div class="clear">
+</div>
+</div>
+</div>
+<div id="side">
+<div class="side">
+<div class="panel" id="panel_Profile">
+<ul class="panel_head"><span>个人资料</span></ul>
+<ul class="panel_body profile">
+<div id="blog_userface">
+<a href="http://my.csdn.net/yangzhenping" target="_blank">
+<img src="http://avatar.csdn.net/F/E/0/1_yangzhenping.jpg" style="max-width:90%" title="访问我的空间"/>
+</a>
+<br/>
+<span><a class="user_name" href="http://my.csdn.net/yangzhenping" target="_blank">yangzhenping</a></span>
+</div>
+<div class="interact">
+<a class="attent" href="javascript:void(0);" id="span_add_follow" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_guanzhu'])" title="[加关注]"></a>
+<a class="letter" href="javascript:void(0);" onclick="window.open('http://msg.csdn.net/letters/model?receiver=yangzhenping','_blank','height=350,width=700');_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_sixin'])" title="[发私信]"></a>
+</div>
+<div id="blog_medal">
+<div class="ico_expert" style="width:54px;height:60px;background:url('http://csdnimg.cn/jifen/images/xunzhang/xunzhang/bokezhuanjiamiddle.png') no-repeat" title="CSDN认证专家"></div>
+<div id="bms_box">
+<a target="_blank">
+<img alt="2" onmouseout="m_out_m()" onmouseover="m_over_m(this,2)" src="http://csdnimg.cn/jifen/images/xunzhang/xunzhang/zhuanlandaren.png"/>
+</a>
+<a target="_blank">
+<img alt="1" onmouseout="m_out_m()" onmouseover="m_over_m(this,4)" src="http://csdnimg.cn/jifen/images/xunzhang/xunzhang/chizhiyiheng.png"/>
+</a>
+</div>
+</div>
+<ul id="blog_rank">
+<li>访问：<span>140902次</span></li>
+<li>积分：<span>4908</span> </li>
+<li>等级： <span style="position:relative;display:inline-block;z-index:1">
+<img alt="" id="leveImg" src="http://csdnimg.cn/jifen/images/xunzhang/jianzhang/blog5.png" style="vertical-align: middle;"/>
+<div id="smallTittle" style=" position: absolute;  left: -24px;  top: 25px;  text-align: center;  width: 101px;  height: 32px;  background-color: #fff;  line-height: 32px;  border: 2px #DDDDDD solid;  box-shadow: 0px 2px 2px rgba (0,0,0,0.1);  display: none;   z-index: 999;">
+<div style="left: 42%;  top: -8px;  position: absolute;  width: 0;  height: 0;  border-left: 10px solid transparent;  border-right: 10px solid transparent;  border-bottom: 8px solid #EAEAEA;"></div>
+            积分：4908 </div>
+</span> </li>
+<li>排名：<span>第1828名</span></li>
+</ul>
+<ul id="blog_statistics">
+<li>原创：<span>316篇</span></li>
+<li>转载：<span>3篇</span></li>
+<li>译文：<span>41篇</span></li>
+<li>评论：<span>26条</span></li>
+</ul>
+</ul>
+</div>
+<div class="panel" id="custom_column_25862659">
+<ul class="panel_head"><span>个人简介</span></ul>
+<ul class="panel_body">
+
+专注于微软System Center和微软公有云，私有云系列产品，主要使用C#.net和php进行个人爱好开发。<br/>
+曾参与Windows Azure Integration Pack for Orchestrator in System Center 2012 SP1的开发和测试。
+
+</ul>
+</div><div class="panel" id="panel_Search">
+<ul class="panel_head"><span>文章搜索</span></ul>
+<ul class="panel_body">
+</ul><form action="http://so.csdn.net/search" class="form_search" id="frmSearch" target="_blank">
+<span><input class="blogsearch" id="inputSearch" title="请输入关键字" type="text"/></span>
+<input id="btnSubmit" title="search in blog" type="button" value="搜索"/>
+<input id="inputQ" name="q" type="hidden"/>
+<input name="t" type="hidden" value="blog"/>
+<a id="btnSearchBlog" target="_blank"></a>
+</form>
+</div>
+<script type="text/javascript">
+    $(function () {
+        $("#btnSubmit").click(function () {           
+            search();
+        });
+
+        $("#frmSearch").submit(function () {
+            search();
+            return false;
+        });
+
+        function search()
+        {
+            var url = "http://so.csdn.net/so/search/s.do?q=" + encodeURIComponent($("#inputSearch").val()) + "&u=" + username + "&t=blog";
+            window.location.href = url;
+        }   
+    });
+</script>
+<div class="panel" id="custom_column_22449642">
+<ul class="panel_head"><span>友情链接</span></ul>
+<ul class="panel_body">
+<a href="http://qq.ihaonet.com/" title="点击进入全球最大QQ聊天交友网">全球最大QQ聊天交友网 </a><br/>
+<a href="http://weixin.ihaonet.com/" title="点击进入微信（易信，新浪）二维码交友">微信（易信，新浪）二维码交友</a>
+<br/>
+<a href="http://health.ihaonet.com/" title="点击进入餐前健康测试网">每餐餐前健康测试 </a><br/>
+</ul>
+</div><div class="panel" id="panel_Category">
+<ul class="panel_head"><span>博客专栏</span></ul>
+<ul class="panel_body" id="sp_column">
+<table cellpadding="0" cellspacing="0"><tr>
+<td style="padding:10px 10px 0 0;">
+<a href="http://blog.csdn.net/column/details/bigdatahdinsight.html" target="_blank"><img src="http://avatar.csdn.net/blogpic/20141110164133187.jpg" style="width:75px;height:75px;"/></a>
+</td>
+<td style="padding:10px 0; vertical-align:top;">
+<a href="http://blog.csdn.net/column/details/bigdatahdinsight.html" target="_blank">微软大数据HDInsight-Hadoop实战</a>
+<p>文章：5篇</p>
+<span>阅读：1842</span>
+</td>
+</tr></table>
+<table cellpadding="0" cellspacing="0"><tr>
+<td style="padding:10px 10px 0 0;">
+<a href="http://blog.csdn.net/column/details/clouddesignpattern.html" target="_blank"><img src="http://avatar.csdn.net/blogpic/20141104165323359.jpg" style="width:75px;height:75px;"/></a>
+</td>
+<td style="padding:10px 0; vertical-align:top;">
+<a href="http://blog.csdn.net/column/details/clouddesignpattern.html" target="_blank">云计算设计模式</a>
+<p>文章：24篇</p>
+<span>阅读：6729</span>
+</td>
+</tr></table>
+</ul>
+</div>
+<div class="panel" id="panel_Category">
+<ul class="panel_head"><span>文章分类</span></ul>
+<ul class="panel_body">
+<li>
+<a href="http://blog.csdn.net/yangzhenping/article/category/670097" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">.net</a><span>(36)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/yangzhenping/article/category/712982" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">ASP.NET</a><span>(13)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/yangzhenping/article/category/734448" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">C#</a><span>(35)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/yangzhenping/article/category/541607" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">c++</a><span>(17)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/yangzhenping/article/category/732062" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">Computer</a><span>(6)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/yangzhenping/article/category/541606" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">c语言</a><span>(9)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/yangzhenping/article/category/549155" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">java</a><span>(1)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/yangzhenping/article/category/656234" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">linux实验</a><span>(8)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/yangzhenping/article/category/729927" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">PowerShell</a><span>(14)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/yangzhenping/article/category/557794" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">UML</a><span>(9)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/yangzhenping/article/category/729922" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">Work</a><span>(0)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/yangzhenping/article/category/665764" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">WPF</a><span>(17)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/yangzhenping/article/category/502063" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">其他</a><span>(16)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/yangzhenping/article/category/656546" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">发布小工具</a><span>(2)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/yangzhenping/article/category/658831" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">套接字编程</a><span>(9)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/yangzhenping/article/category/543178" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">娱乐</a><span>(5)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/yangzhenping/article/category/671190" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">弱者求强</a><span>(16)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/yangzhenping/article/category/671193" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">弱者求强</a><span>(15)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/yangzhenping/article/category/502218" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">数据库</a><span>(3)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/yangzhenping/article/category/541611" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">数据结构</a><span>(7)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/yangzhenping/article/category/656235" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">数据结构课程设计</a><span>(9)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/yangzhenping/article/category/624948" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">数论</a><span>(1)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/yangzhenping/article/category/546896" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">研究源码</a><span>(2)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/yangzhenping/article/category/727826" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">程序人生</a><span>(19)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/yangzhenping/article/category/502044" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">算法</a><span>(11)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/yangzhenping/article/category/655728" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">经济生活</a><span>(19)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/yangzhenping/article/category/543839" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">网络</a><span>(2)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/yangzhenping/article/category/540506" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">考研</a><span>(1)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/yangzhenping/article/category/712983" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">面试参考</a><span>(23)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/yangzhenping/article/category/588148" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">项目</a><span>(2)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/yangzhenping/article/category/1172658" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">敏捷建模</a><span>(2)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/yangzhenping/article/category/1280869" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">System Center Orchestrator</a><span>(5)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/yangzhenping/article/category/1299302" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">System Center VMM</a><span>(2)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/yangzhenping/article/category/1299303" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">System Center OM</a><span>(2)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/yangzhenping/article/category/1299304" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">System Center SM</a><span>(2)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/yangzhenping/article/category/1299306" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">System Center CM</a><span>(1)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/yangzhenping/article/category/1299307" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">System Center DPM</a><span>(1)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/yangzhenping/article/category/1299308" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">System Center App Controller</a><span>(1)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/yangzhenping/article/category/1299309" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">Windows Azure</a><span>(5)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/yangzhenping/article/category/1360272" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">MS SQL Server</a><span>(6)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/yangzhenping/article/category/1543189" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">PHP</a><span>(4)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/yangzhenping/article/category/1661347" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">Linq</a><span>(3)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/yangzhenping/article/category/1661483" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">MVC</a><span>(8)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/yangzhenping/article/category/1669675" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">域名</a><span>(28)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/yangzhenping/article/category/1676845" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">SQL</a><span>(9)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/yangzhenping/article/category/1740007" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">论坛</a><span>(1)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/yangzhenping/article/category/1756847" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">搜索引擎</a><span>(4)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/yangzhenping/article/category/1842337" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">互联网</a><span>(13)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/yangzhenping/article/category/2136055" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">网络支付</a><span>(2)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/yangzhenping/article/category/2136057" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">支付安全</a><span>(1)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/yangzhenping/article/category/2148409" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">比特币</a><span>(1)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/yangzhenping/article/category/2618411" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">云计算</a><span>(43)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/yangzhenping/article/category/2657825" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">大数据</a><span>(8)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/yangzhenping/article/category/2663541" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">service bus</a><span>(1)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/yangzhenping/article/category/2663543" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">aliyun</a><span>(1)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/yangzhenping/article/category/2663545" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">ONS</a><span>(1)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/yangzhenping/article/category/2683177" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">架构</a><span>(1)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/yangzhenping/article/category/2683179" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">设计</a><span>(23)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/yangzhenping/article/category/2685787" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">设计模式</a><span>(24)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/yangzhenping/article/category/2700207" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">HDInsight</a><span>(5)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/yangzhenping/article/category/2700209" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">Hadoop</a><span>(7)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/yangzhenping/article/category/2700211" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">YARN</a><span>(3)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/yangzhenping/article/category/2700215" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">Pig</a><span>(3)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/yangzhenping/article/category/2700217" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">Hive</a><span>(5)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/yangzhenping/article/category/2700219" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">HDFS</a><span>(3)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/yangzhenping/article/category/2700221" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">MapReduce</a><span>(2)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/yangzhenping/article/category/2700315" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">HBase</a><span>(5)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/yangzhenping/article/category/2719223" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">网站安全</a><span>(7)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/yangzhenping/article/category/2719225" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">黑客攻击</a><span>(5)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/yangzhenping/article/category/2752665" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">docker</a><span>(5)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/yangzhenping/article/category/2752667" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">CoreOS</a><span>(1)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/yangzhenping/article/category/2754853" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">Fedora</a><span>(1)</span>
+</li>
+</ul>
+</div><div class="panel" id="panel_Archive">
+<ul class="panel_head"><span>文章存档</span></ul>
+<ul class="panel_body">
+<div id="archive_list">
+<!--归档统计-->
+<li><a href="http://blog.csdn.net/yangzhenping/article/month/2014/12">2014年12月</a><span>(10)</span></li><li><a href="http://blog.csdn.net/yangzhenping/article/month/2014/11">2014年11月</a><span>(36)</span></li><li><a href="http://blog.csdn.net/yangzhenping/article/month/2014/10">2014年10月</a><span>(12)</span></li><li><a href="http://blog.csdn.net/yangzhenping/article/month/2014/07">2014年07月</a><span>(3)</span></li><li><a href="http://blog.csdn.net/yangzhenping/article/month/2014/06">2014年06月</a><span>(1)</span></li><li><a href="http://blog.csdn.net/yangzhenping/article/month/2014/04">2014年04月</a><span>(1)</span></li><li><a href="http://blog.csdn.net/yangzhenping/article/month/2014/03">2014年03月</a><span>(10)</span></li><li><a href="http://blog.csdn.net/yangzhenping/article/month/2014/02">2014年02月</a><span>(1)</span></li><li><a href="http://blog.csdn.net/yangzhenping/article/month/2014/01">2014年01月</a><span>(2)</span></li><li><a href="http://blog.csdn.net/yangzhenping/article/month/2013/12">2013年12月</a><span>(6)</span></li><li><a href="http://blog.csdn.net/yangzhenping/article/month/2013/11">2013年11月</a><span>(4)</span></li><li><a href="http://blog.csdn.net/yangzhenping/article/month/2013/10">2013年10月</a><span>(16)</span></li><li><a href="http://blog.csdn.net/yangzhenping/article/month/2013/09">2013年09月</a><span>(21)</span></li><li><a href="http://blog.csdn.net/yangzhenping/article/month/2013/08">2013年08月</a><span>(8)</span></li><li><a href="http://blog.csdn.net/yangzhenping/article/month/2013/07">2013年07月</a><span>(3)</span></li><li><a href="http://blog.csdn.net/yangzhenping/article/month/2013/06">2013年06月</a><span>(1)</span></li><li><a href="http://blog.csdn.net/yangzhenping/article/month/2013/05">2013年05月</a><span>(1)</span></li><li><a href="http://blog.csdn.net/yangzhenping/article/month/2013/04">2013年04月</a><span>(4)</span></li><li><a href="http://blog.csdn.net/yangzhenping/article/month/2013/03">2013年03月</a><span>(2)</span></li><li><a href="http://blog.csdn.net/yangzhenping/article/month/2013/02">2013年02月</a><span>(2)</span></li><li><a href="http://blog.csdn.net/yangzhenping/article/month/2013/01">2013年01月</a><span>(7)</span></li><li><a href="http://blog.csdn.net/yangzhenping/article/month/2012/12">2012年12月</a><span>(2)</span></li><li><a href="http://blog.csdn.net/yangzhenping/article/month/2012/11">2012年11月</a><span>(1)</span></li><li><a href="http://blog.csdn.net/yangzhenping/article/month/2012/10">2012年10月</a><span>(1)</span></li><li><a href="http://blog.csdn.net/yangzhenping/article/month/2012/08">2012年08月</a><span>(1)</span></li><li><a href="http://blog.csdn.net/yangzhenping/article/month/2012/06">2012年06月</a><span>(3)</span></li><li><a href="http://blog.csdn.net/yangzhenping/article/month/2012/04">2012年04月</a><span>(3)</span></li><li><a href="http://blog.csdn.net/yangzhenping/article/month/2012/03">2012年03月</a><span>(2)</span></li><li><a href="http://blog.csdn.net/yangzhenping/article/month/2012/02">2012年02月</a><span>(3)</span></li><li><a href="http://blog.csdn.net/yangzhenping/article/month/2011/06">2011年06月</a><span>(23)</span></li><li><a href="http://blog.csdn.net/yangzhenping/article/month/2010/12">2010年12月</a><span>(2)</span></li><li><a href="http://blog.csdn.net/yangzhenping/article/month/2010/11">2010年11月</a><span>(6)</span></li><li><a href="http://blog.csdn.net/yangzhenping/article/month/2010/10">2010年10月</a><span>(5)</span></li><li><a href="http://blog.csdn.net/yangzhenping/article/month/2010/09">2010年09月</a><span>(23)</span></li><li><a href="http://blog.csdn.net/yangzhenping/article/month/2010/08">2010年08月</a><span>(3)</span></li><li><a href="http://blog.csdn.net/yangzhenping/article/month/2010/07">2010年07月</a><span>(28)</span></li><li><a href="http://blog.csdn.net/yangzhenping/article/month/2010/06">2010年06月</a><span>(9)</span></li><li><a href="http://blog.csdn.net/yangzhenping/article/month/2010/05">2010年05月</a><span>(2)</span></li><li><a href="http://blog.csdn.net/yangzhenping/article/month/2010/04">2010年04月</a><span>(12)</span></li><li><a href="http://blog.csdn.net/yangzhenping/article/month/2010/03">2010年03月</a><span>(12)</span></li><li><a href="http://blog.csdn.net/yangzhenping/article/month/2010/02">2010年02月</a><span>(59)</span></li><li><a href="http://blog.csdn.net/yangzhenping/article/month/2009/12">2009年12月</a><span>(1)</span></li><li><a href="http://blog.csdn.net/yangzhenping/article/month/2009/11">2009年11月</a><span>(1)</span></li><li><a href="http://blog.csdn.net/yangzhenping/article/month/2009/10">2009年10月</a><span>(1)</span></li><li><a href="http://blog.csdn.net/yangzhenping/article/month/2009/09">2009年09月</a><span>(4)</span></li><li><a href="http://blog.csdn.net/yangzhenping/article/month/2009/07">2009年07月</a><span>(1)</span></li><li><a href="http://blog.csdn.net/yangzhenping/article/month/2009/06">2009年06月</a><span>(10)</span></li><li><a href="http://blog.csdn.net/yangzhenping/article/month/2009/05">2009年05月</a><span>(2)</span></li><li><a href="http://blog.csdn.net/yangzhenping/article/month/2008/08">2008年08月</a><span>(1)</span></li>
+</div>
+</ul>
+</div>
+</div>
+<div class="clear">
+</div>
+</div>
+<div class="clear">
+</div>
+</div>
+<script src="http://csdnimg.cn/rabbit/cnick/cnick.js" type="text/javascript"></script>
+<script src="http://static.blog.csdn.net/scripts/newblog.min.js" type="text/javascript"></script>
+<script src="http://medal.blog.csdn.net/showblogmedal.ashx?blogid=260656" type="text/javascript"></script>
+<script src="http://static.blog.csdn.net/scripts/JavaScript1.js" type="text/javascript"></script>
+<script src="http://passport.csdn.net/content/loginbox/login.js" type="text/javascript"></script>
+<script type="text/javascript">document.write("<img src=http://counter.csdn.net/pv.aspx?id=24 border=0 width=0 height=0>");</script>
+<script src="http://www.csdn.net/ui/scripts/Csdn/counter.js" type="text/javascript"></script>
+<script src="http://ad.csdn.net/scripts/ad-blog.js" type="text/javascript"></script>
+<script src="http://zz.csdn.net/js/count.js" type="text/javascript"></script>
+<script type="text/javascript">
+    $(function () {
+        function __get_code_toolbar(snippet_id) {
+            return $("<a href='https://code.csdn.net/snippets/"
+                    + snippet_id
+                    + "' target='_blank' title='在CODE上查看代码片' style='text-indent:0;'><img src='https://code.csdn.net/assets/CODE_ico.png' width=12 height=12 alt='在CODE上查看代码片' style='position:relative;top:1px;left:2px;'/></a>"
+                    + "<a href='https://code.csdn.net/snippets/"
+                    + snippet_id
+                    + "/fork' target='_blank' title='派生到我的代码片'  style='text-indent:0;'><img src='https://code.csdn.net/assets/ico_fork.svg' width=12 height=12 alt='派生到我的代码片' style='position:relative;top:2px;left:2px;'/></a>");
+        }
+        
+        $("[code_snippet_id]").each(function () {
+            __s_id = $(this).attr("code_snippet_id");
+            if (__s_id != null && __s_id != "" && __s_id != 0 && parseInt(__s_id) > 70020) {
+                __code_tool = __get_code_toolbar(__s_id);
+                $(this).prev().find(".tools").append(__code_tool);
+            }
+        });
+    });
+</script>
+</div>
+<!--new top-->
+<script btnid="header_notice_num" count="5" id="csdn-toolbar-id" src="http://static.csdn.net/public/common/toolbar/js/toolbar.js" subcount="5" type="text/javascript" wrapid="note1"></script> <!--new top-->
+<link href="http://csdnimg.cn/comm_ask/css/ask_float_block.css" rel="stylesheet" type="text/css"/>
+<script language="JavaScript" src="http://csdnimg.cn/comm_ask/js/libs/wmd.js" type="text/javascript"></script>
+<script language="JavaScript" src="http://csdnimg.cn/comm_ask/js/libs/showdown.js" type="text/javascript"></script>
+<script language="JavaScript" src="http://csdnimg.cn/comm_ask/js/libs/prettify.js" type="text/javascript"></script>
+<script language="JavaScript" src="http://csdnimg.cn/comm_ask/js/apps/ask_float_block.js" type="text/javascript"></script>
+</body>
+</html>

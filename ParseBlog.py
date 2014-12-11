@@ -64,9 +64,12 @@ class ParseBlog:
             for x in content.children:
                 print 'from parseNode'
                 self.parseHTML(x)
+                content.unwrap()
+            # content.unwrap()
 
     def parseHTML(self,contentTag):
         for item in contentTag:
+            #如果是字符串比如u"\n"那么会直接去到except
             try:
                 #'h1', 'h2', 'h3', 'h4', 'h5', 'h6'
                 if item.name.lower() in ['h1', 'h2', 'h3', 'h4', 'h5', 'h6']:
@@ -107,15 +110,20 @@ class ParseBlog:
                 #<p
                 if item.name.lower() == 'p':
                     p_text = '\n'
+                    print 'from p'
                     try:
-                        if len(item.contents):
-                            self.parseNode(item)
+                        if len(item.contents) == 1 and item.contents[0].contents:
+
                             p_text += item.decode_contents()
                             item.replace_with(p_text)
+                            item.unwrap()
+                        else:
+                            self.parseNode(item)
                             item.unwrap()
                     except:
                         p_text += item.get_text()
                         item.replace_with(p_text)
+                        item.unwrap()
                 #<br>
                 if item.name.lower() == 'br':
                     br_text = '\n'
@@ -145,11 +153,13 @@ class ParseBlog:
 
             except Exception, e:
                 #print e
+                print item
                 print type(e)
 
 
     def save2md(self):
         f = file('aaaaaaaaa.md', 'w')
-        f.write(str(self.content))
+        f.write(str(self.soup))
+        # f.write(str(self.content))
         f.close()
         print 'save complite---------------------------------------'
