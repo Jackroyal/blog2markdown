@@ -4,6 +4,7 @@
 
 from bs4 import BeautifulSoup as bs
 import re
+from bs4 import NavigableString
 
 class ParseBlog:
     """docstring for ParseBlog"""
@@ -57,109 +58,121 @@ class ParseBlog:
         return content
     def parseNode(self, content):
         try:
-            print len(content.contents)
+            if isinstance(content , NavigableString):
+                pass
+            else:
+                for x in content.children:
+                    print 'from parseNode'
+                    if isinstance(x,NavigableString):
+                        pass
+                    else:
+                        self.parseHTML(x)
+
         except Exception, e:
             print e
-        else :
-            for x in content.children:
-                print 'from parseNode'
-                self.parseHTML(x)
-                content.unwrap()
+        # else:
             # content.unwrap()
 
     def parseHTML(self,contentTag):
-        for item in contentTag:
-            #如果是字符串比如u"\n"那么会直接去到except
-            try:
-                #'h1', 'h2', 'h3', 'h4', 'h5', 'h6'
-                if item.name.lower() in ['h1', 'h2', 'h3', 'h4', 'h5', 'h6']:
-                    h_text = '\n'
-                    #简单快速的完成#的复制，使用lambda表达式
-                    h_text += (lambda s : s*(int(['h1', 'h2', 'h3', 'h4', 'h5', 'h6'].index(item.name))+1))('#')
-                    h_text += item.text #加上原来h1的内容
-                    item.replace_with(h_text)
+        # for item in contentTag:
+        item = contentTag
+        #如果是字符串比如u"\n"那么会直接去到except
+        try:
+            #'h1', 'h2', 'h3', 'h4', 'h5', 'h6'
+            if item.name.lower() in ['h1', 'h2', 'h3', 'h4', 'h5', 'h6']:
+                h_text = '\n'
+                #简单快速的完成#的复制，使用lambda表达式
+                h_text += (lambda s : s*(int(['h1', 'h2', 'h3', 'h4', 'h5', 'h6'].index(item.name))+1))('#')
+                h_text += item.text #加上原来h1的内容
+                item.replace_with(h_text)
 
-                #<a
-                if item.name.lower() == 'a':
-                    a_text = '\n'
-                    a_text += '['
-                    if item.string != None:
-                        a_text += item.string
-                    a_text = a_text + '](' +item.attrs['href']
-                    if  item.attrs.get('title',None) != None:
-                        a_text += '"' + item.attrs['title'] + '"'
-                    a_text += ')\n'
-                    item.replace_with(a_text)
-                #<img
-                if item.name.lower() == 'img':
-                    img_text = '\n'
-                    img_text += '!['
-                    temp_t = item.attrs.get('alt') or item.attrs.get('title')
-                    if temp_t:
-                        img_text += temp_t + '](' + item.attrs['src'] + '"' + temp_t +'")'
-                    else:
-                        img_text += '](' + item.attrs['src'] + ')\n'
-                    item.replace_with(img_text)
-                #<pre
-                if item.name.lower() == 'pre':
-                    #首先判断它是不是代码区域
-                    pre_text = '\n'
-                    if item.attrs.get('name',None) and item.attrs.get('name',None) == 'code':
-                        pre_text += '```%s\n%s\n```\n' % (str(item.attrs['class'][0]), item.text)
-                    item.replace_with(pre_text)
-                #<p
-                if item.name.lower() == 'p':
-                    p_text = '\n'
-                    print 'from p'
-                    try:
-                        if len(item.contents) == 1 and item.contents[0].contents:
-
-                            p_text += item.decode_contents()
-                            item.replace_with(p_text)
-                            item.unwrap()
-                        else:
-                            self.parseNode(item)
-                            item.unwrap()
-                    except:
-                        p_text += item.get_text()
+            #<a
+            if item.name.lower() == 'a':
+                a_text = '\n'
+                a_text += '['
+                if item.string != None:
+                    a_text += item.string
+                else:
+                    a_text += item.get_text()
+                a_text = a_text + '](' +item.attrs['href']
+                if  item.attrs.get('title',None) != None:
+                    a_text += '"' + item.attrs['title'] + '"'
+                a_text += ')\n'
+                item.replace_with(a_text)
+            #<img
+            if item.name.lower() == 'img':
+                img_text = '\n'
+                img_text += '!['
+                temp_t = item.attrs.get('alt') or item.attrs.get('title')
+                if temp_t:
+                    img_text += temp_t + '](' + item.attrs['src'] + '"' + temp_t +'")'
+                else:
+                    img_text += '](' + item.attrs['src'] + ')\n'
+                item.replace_with(img_text)
+            #<pre
+            if item.name.lower() == 'pre':
+                #首先判断它是不是代码区域
+                pre_text = '\n'
+                if item.attrs.get('name',None) and item.attrs.get('name',None) == 'code':
+                    pre_text += '```%s\n%s\n```\n' % (str(item.attrs['class'][0]), item.text)
+                item.replace_with(pre_text)
+            #<p
+            if item.name.lower() == 'p':
+                p_text = '\n'
+                print 'from p'
+                try:
+                    if len(item.contents) == 1 and isinstance(item.contents[0], NavigableString):
+                        p_text += item.contents[0].decode_contents
                         item.replace_with(p_text)
-                        item.unwrap()
-                #<br>
-                if item.name.lower() == 'br':
-                    br_text = '\n'
-                    item.replace_with(br_text)
-                #<span
-                if item.name.lower() == 'span':
-                    span_text = ''
-                    #span_text = '\n'
-                    try:
-                        if len(item.contents):
-                            # span_text += item.decode_contents()
-                            self.parseNode(item)
-                            item.unwrap()
-                    except:
-                        span_text += item.get_text()
                     else:
+                        self.parseNode(item)
+                        item.replace_with(item.decode_contents())
+                except Exception, e:
+                    p_text += item.get_text()
+                    item.replace_with(p_text)
+            #<br>
+            if item.name.lower() == 'br':
+                br_text = '\n'
+                item.replace_with(br_text)
+            #<span
+            if item.name.lower() == 'span':
+                span_text = ''
+                try:
+                    if len(item.contents) == 1 and isinstance(item.contents[0], NavigableString):
+                        span_text += item.decode_contents()
+                        # span_text += item.get_text()
                         item.replace_with(span_text)
+                        # item.unwrap()
+                        # pass
+                    else:
+                        self.parseNode(item)
+                        item.replace_with(item.decode_contents())
+                except Exception, e:
+                    pass
 
-                # if re.match('<span\s*>[\W\D]*</span>', str(item)):
-                #     span_text += ''
-                # # elif re.match('<span[\s\S]*?>.*?[<\s*\w{1,8}]+.*?</span>', str(item)) == None:
-                # #     span_text += item.text + '\n'
-                # else:
-                #     span_text += item.text
-                #     # span_text += str(item) + '\n'
-                #item.replace_with(span_text)
+            # if re.match('<span\s*>[\W\D]*</span>', str(item)):
+            #     span_text += ''
+            # # elif re.match('<span[\s\S]*?>.*?[<\s*\w{1,8}]+.*?</span>', str(item)) == None:
+            # #     span_text += item.text + '\n'
+            # else:
+            #     span_text += item.text
+            #     # span_text += str(item) + '\n'
+            #item.replace_with(span_text)
+                #span_text = '\n'
+                # span_text = ''
 
-            except Exception, e:
-                #print e
-                print item
-                print type(e)
+        except Exception, e:
+            #print e
+            print item
+            print type(e)
 
 
     def save2md(self):
         f = file('aaaaaaaaa.md', 'w')
-        f.write(str(self.soup))
-        # f.write(str(self.content))
+        tt = self.soup.find('div', class_="article_content").decode_contents()
+        f.write((self.soup.find('div', class_="article_content").decode_contents()).encode('utf-8'))
+        print type(tt)
+        print type(str(self.soup.find('div', class_="article_content")))
+        # f.write(str(self.soup.find('div', class_="article_content")))
         f.close()
         print 'save complite---------------------------------------'
