@@ -12,7 +12,7 @@ class CsdnSpider:
     """docstring for Spider"""
     def __init__(self, url):
         self.url = url #本次抓取的url
-        self.crawl()   #抓取一次獲取本次的
+        self.crawl()   #抓取一次获取本次的url_list
 
         #初始化完成
     def crawl(self):#第一次抓取
@@ -51,7 +51,8 @@ class BlogSpider:
         # self.setNum()   #设定循环次数和总文章数目
         # self.getList()  #获取所有的博客地址和文章标题
         # print "列表抓取成功，总共获取%d篇文章" % BlogSpider.totalNum
-        BlogSpider.url_list = [('建立HBase的集群和HDInsight在Hadoop中使用Hive来查询它们' , 'http://blog.csdn.net/yangzhenping/article/details/41079223')]
+        # BlogSpider.url_list = [('建立HBase的集群和HDInsight在Hadoop中使用Hive来查询它们' , 'http://blog.csdn.net/yangzhenping/article/details/41079223')]
+        BlogSpider.url_list = [('建立HBase的集群和HDInsight在Hadoop中使用Hive来查询它们' , 'http://blog.csdn.net/yangzhenping/article/details/41946199')]
         self.parseBlog()
 
 

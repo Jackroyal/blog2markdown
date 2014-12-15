@@ -20,6 +20,9 @@ class ParseBlog:
         self.tag = self.setTag()
         self.content = self.setContent()
         self.save2md()
+        print self.title
+        print self.time
+        print self.category
 
     def setTitle(self):
         return (self.soup.find('span', class_="link_title").get_text()).strip()
@@ -62,7 +65,6 @@ class ParseBlog:
                 pass
             else:
                 for x in content.children:
-                    print 'from parseNode'
                     if isinstance(x,NavigableString):
                         pass
                     else:
@@ -70,8 +72,6 @@ class ParseBlog:
 
         except Exception, e:
             print e
-        # else:
-            # content.unwrap()
 
     def parseHTML(self,contentTag):
         # for item in contentTag:
@@ -83,12 +83,12 @@ class ParseBlog:
                 h_text = '\n'
                 #简单快速的完成#的复制，使用lambda表达式
                 h_text += (lambda s : s*(int(['h1', 'h2', 'h3', 'h4', 'h5', 'h6'].index(item.name))+1))('#')
-                h_text += item.text #加上原来h1的内容
+                h_text += item.text + '\n'#加上原来h1的内容
                 item.replace_with(h_text)
 
             #<a
             if item.name.lower() == 'a':
-                a_text = '\n'
+                a_text = ''
                 a_text += '['
                 if item.string != None:
                     a_text += item.string
@@ -97,7 +97,7 @@ class ParseBlog:
                 a_text = a_text + '](' +item.attrs['href']
                 if  item.attrs.get('title',None) != None:
                     a_text += '"' + item.attrs['title'] + '"'
-                a_text += ')\n'
+                a_text += ')'
                 item.replace_with(a_text)
             #<img
             if item.name.lower() == 'img':
@@ -119,7 +119,6 @@ class ParseBlog:
             #<p
             if item.name.lower() == 'p':
                 p_text = '\n'
-                print 'from p'
                 try:
                     if len(item.contents) == 1 and isinstance(item.contents[0], NavigableString):
                         p_text += item.contents[0].decode_contents
@@ -149,6 +148,16 @@ class ParseBlog:
                         item.replace_with(item.decode_contents())
                 except Exception, e:
                     pass
+            #<strong
+            if item.name.lower() == 'strong':
+                strong_text = '**%s**'
+                try:
+                    item.replace_with(strong_text % (item.decode_contents()).encode('utf-8'))
+                except Exception, e:
+                    print 'from strong'
+                    print item.decode_contents()
+                    print item
+                    print type(e)
 
             # if re.match('<span\s*>[\W\D]*</span>', str(item)):
             #     span_text += ''
@@ -168,9 +177,10 @@ class ParseBlog:
 
 
     def save2md(self):
+        head = '''title: %s\ndate: %s\ntags:\n- %s\ncategories:\n- %s\n---''' % (self.title, self.time, '\n- '.join(self.tag), '\n- '.join(self.category))
         f = file('aaaaaaaaa.md', 'w')
         tt = self.soup.find('div', class_="article_content").decode_contents()
-        f.write((self.soup.find('div', class_="article_content").decode_contents()).encode('utf-8'))
+        f.write(head.encode('utf-8') + (self.soup.find('div', class_="article_content").decode_contents()).encode('utf-8'))
         print type(tt)
         print type(str(self.soup.find('div', class_="article_content")))
         # f.write(str(self.soup.find('div', class_="article_content")))
