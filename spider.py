@@ -51,19 +51,22 @@ class BlogSpider:
         # self.setNum()   #设定循环次数和总文章数目
         # self.getList()  #获取所有的博客地址和文章标题
         # print "列表抓取成功，总共获取%d篇文章" % BlogSpider.totalNum
-        # BlogSpider.url_list = [('建立HBase的集群和HDInsight在Hadoop中使用Hive来查询它们' , 'http://blog.csdn.net/yangzhenping/article/details/41079223')]
-        BlogSpider.url_list = [('建立HBase的集群和HDInsight在Hadoop中使用Hive来查询它们' , 'http://blog.csdn.net/yangzhenping/article/details/41946199')]
+        BlogSpider.url_list = [('建立HBase的集群和HDInsight在Hadoop中使用Hive来查询它们' , 'http://blog.csdn.net/jackroyal/article/details/41442157')]
         self.parseBlog()
 
 
     def setNum(self):
-        str_total = self.spider.soup.find('div', class_="pagelist").find('span').get_text()
-        pattern = re.compile('^\s+([\d]+)[\D]+?([\d]+)[\D]+')
-        match = pattern.findall(str_total)  #match = [(u'370', u'8')]
-        # BlogSpider.totalNum = 1
-        # BlogSpider.runNum = 1
-        BlogSpider.totalNum = int(match[0][0])
-        BlogSpider.runNum = int(match[0][1])
+        tt = self.spider.soup.find('div', class_="pagelist")
+        if tt != None:
+            str_total = tt.find('span').get_text()
+            pattern = re.compile('^\s+([\d]+)[\D]+?([\d]+)[\D]+')
+            match = pattern.findall(str_total)  #match = [(u'370', u'8')]
+            BlogSpider.totalNum = int(match[0][0])
+            BlogSpider.runNum = int(match[0][1])
+        else:
+            tt = self.spider.soup.find('div', id="article_list")
+            BlogSpider.totalNum = len(tt.find_all('div', class_ = "list_item list_view"))
+            BlogSpider.runNum = 1
 
     def getList(self):
         if BlogSpider.runNum != 0:
@@ -121,7 +124,7 @@ class BlogSpider:
 # print soup.find_all('a')[10].get_text()
 
 if __name__ == '__main__':
-    url = "http://blog.csdn.net/yangzhenping?viewmode=contents"
+    url = "http://blog.csdn.net/jackroyal?viewmode=contents"
     blog = BlogSpider(url)
     #print blog.url_list
     #print BlogSpider.url_list

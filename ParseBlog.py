@@ -48,15 +48,7 @@ class ParseBlog:
         return tag
     def setContent(self):
         content = self.soup.find('div', class_="article_content")
-        f = file('conten.txt', 'w')
-        f.write(str(content))
-        f.close()
-        contentTag = content.find_all()  #获取所有article_content里面的子标签
-        print 'from setContent'
         self.parseNode(content)
-        f = file('contentTag.txt', 'w')
-        f.write(str(contentTag) + "\nlen %d" % len(contentTag) + '\n%s' % contentTag[0])
-        f.close()
 
         return content
     def parseNode(self, content):
@@ -119,16 +111,7 @@ class ParseBlog:
             #<p
             if item.name.lower() == 'p':
                 p_text = '\n'
-                try:
-                    if len(item.contents) == 1 and isinstance(item.contents[0], NavigableString):
-                        p_text += item.contents[0].decode_contents
-                        item.replace_with(p_text)
-                    else:
-                        self.parseNode(item)
-                        item.replace_with(item.decode_contents())
-                except Exception, e:
-                    p_text += item.get_text()
-                    item.replace_with(p_text)
+                self.comm(item, p_text)
             #<br>
             if item.name.lower() == 'br':
                 br_text = '\n'
@@ -136,21 +119,11 @@ class ParseBlog:
             #<span
             if item.name.lower() == 'span':
                 span_text = ''
-                try:
-                    if len(item.contents) == 1 and isinstance(item.contents[0], NavigableString):
-                        span_text += item.decode_contents()
-                        # span_text += item.get_text()
-                        item.replace_with(span_text)
-                        # item.unwrap()
-                        # pass
-                    else:
-                        self.parseNode(item)
-                        item.replace_with(item.decode_contents())
-                except Exception, e:
-                    pass
-            #<strong
-            if item.name.lower() == 'strong':
-                strong_text = '**%s**'
+                self.comm(item, span_text)
+            #<strong or <em
+            if item.name.lower() == 'strong' or item.name.lower() == 'em':
+                ss = (lambda s : s*(int(['strong', 'em'].index(item.name.lower()))+1))('*')
+                strong_text = ss + '%s' + ss
                 try:
                     item.replace_with(strong_text % (item.decode_contents()).encode('utf-8'))
                 except Exception, e:
@@ -159,26 +132,48 @@ class ParseBlog:
                     print item
                     print type(e)
 
-            # if re.match('<span\s*>[\W\D]*</span>', str(item)):
-            #     span_text += ''
-            # # elif re.match('<span[\s\S]*?>.*?[<\s*\w{1,8}]+.*?</span>', str(item)) == None:
-            # #     span_text += item.text + '\n'
-            # else:
-            #     span_text += item.text
-            #     # span_text += str(item) + '\n'
-            #item.replace_with(span_text)
-                #span_text = '\n'
-                # span_text = ''
+            #<ol or <ul
+            if item.name.lower() == 'ol' or item.name.lower() == 'ul':
+                self.parseNode(item)
+                item.replace_with(item.decode_contents())
+
+            #<li
+            if item.name.lower() == "li":
+                li_text = ''
+                if item.parent.name.lower() == "ol":#<ol
+                    li_text = '1. '
+
+                if item.parent.name.lower() == "ul":
+                    li_text = '+ '
+                try:
+                    if len(item.contents) == 1 and isinstance(item.contents[0], NavigableString):
+                        li_text += item.decode_contents()
+                        item.replace_with(li_text)
+                    else:
+                        self.parseNode(item)
+                        item.replace_with('\n' + li_text + item.decode_contents())
+                except Exception, e:
+                    pass
 
         except Exception, e:
-            #print e
             print item
             print type(e)
 
+    def comm(self, item, text):
+        comm_text = text or ''
+        try:
+            if len(item.contents) == 1 and isinstance(item.contents[0], NavigableString):
+                comm_text += item.decode_contents()
+                item.replace_with(comm_text)
+            else:
+                self.parseNode(item)
+                item.replace_with(item.decode_contents())
+        except Exception, e:
+            pass
 
     def save2md(self):
-        head = '''title: %s\ndate: %s\ntags:\n- %s\ncategories:\n- %s\n---''' % (self.title, self.time, '\n- '.join(self.tag), '\n- '.join(self.category))
-        f = file('aaaaaaaaa.md', 'w')
+        head = '''title: '%s'\ndate: %s\ntags:\n- %s\ncategories:\n- %s\n---''' % (self.title, self.time, '\n- '.join(self.tag), '\n- '.join(self.category))
+        f = file((self.title + '.md'), 'w')
         tt = self.soup.find('div', class_="article_content").decode_contents()
         f.write(head.encode('utf-8') + (self.soup.find('div', class_="article_content").decode_contents()).encode('utf-8'))
         print type(tt)
