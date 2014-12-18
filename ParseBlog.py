@@ -12,6 +12,7 @@ class ParseBlog:
         print type(soup)
         self.nodeList = []
         self.soup = soup
+        self.nobr = True
         print type(self.soup)
         print (self.soup.find('span', class_="link_categories"))
         self.title = self.setTitle()
@@ -20,9 +21,6 @@ class ParseBlog:
         self.tag = self.setTag()
         self.content = self.setContent()
         self.save2md()
-        print self.title
-        print self.time
-        print self.category
 
     def setTitle(self):
         return (self.soup.find('span', class_="link_title").get_text()).strip()
@@ -93,13 +91,13 @@ class ParseBlog:
                 item.replace_with(a_text)
             #<img
             if item.name.lower() == 'img':
-                img_text = '\n'
+                img_text = ''
                 img_text += '!['
                 temp_t = item.attrs.get('alt') or item.attrs.get('title')
                 if temp_t:
                     img_text += temp_t + '](' + item.attrs['src'] + '"' + temp_t +'")'
                 else:
-                    img_text += '](' + item.attrs['src'] + ')\n'
+                    img_text += '](' + item.attrs['src'] + ')'
                 item.replace_with(img_text)
             #<pre
             if item.name.lower() == 'pre':
@@ -110,11 +108,17 @@ class ParseBlog:
                 item.replace_with(pre_text)
             #<p
             if item.name.lower() == 'p':
-                p_text = '\n'
+                if self.nobr == True:
+                    p_text = '\n'
+                else:
+                    p_text = '<br>'
                 self.comm(item, p_text)
             #<br>
             if item.name.lower() == 'br':
-                br_text = '\n'
+                if self.nobr == False:
+                    br_text = '<br>'
+                else:
+                    br_text = '\n'
                 item.replace_with(br_text)
             #<span
             if item.name.lower() == 'span':
@@ -134,7 +138,9 @@ class ParseBlog:
 
             #<ol or <ul
             if item.name.lower() == 'ol' or item.name.lower() == 'ul':
+                self.nobr = False
                 self.parseNode(item)
+                self.nobr = True
                 item.replace_with(item.decode_contents())
 
             #<li
