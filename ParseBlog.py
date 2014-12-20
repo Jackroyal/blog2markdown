@@ -3,18 +3,15 @@
 # Filename: ParseBlog.py
 
 from bs4 import BeautifulSoup as bs
-import re, HTMLParser
+import re
 from bs4 import NavigableString
 
 class ParseBlog:
     """docstring for ParseBlog"""
     def __init__(self, soup):
-        print type(soup)
         self.nodeList = []
         self.soup = soup
         self.nobr = True
-        print type(self.soup)
-        print (self.soup.find('span', class_="link_categories"))
         self.title = self.setTitle()
         self.time = self.setTime()
         self.category = self.setCategory()
@@ -23,7 +20,7 @@ class ParseBlog:
         self.save2md()
 
     def setTitle(self):
-        return (self.soup.find('span', class_="link_title").get_text()).strip()
+        return re.sub('[ 　]','_',(self.soup.find('span', class_="link_title").get_text()).strip())
     def setTime(self):
         return (self.soup.find('span', class_="link_postdate").get_text()).strip()
     def setCategory(self):
@@ -49,6 +46,20 @@ class ParseBlog:
         self.parseNode(content)
 
         return content
+    def setHead(self):
+        head = ''
+        if self.title:
+            head += '''title: '%s'\n''' % self.title
+        else:
+            head += '''title: '%s'\n''' % '无题'
+        if self.time:
+            head += '''date: %s\n''' % self.time
+        if self.tag:
+            head += '''tags:\n- %s\n''' % '\n- '.join(self.tag)
+        if self.category:
+            head += '''categories:\n- %s\n''' % '\n- '.join(self.category)
+        head +='---'
+        return head
     def parseNode(self, content):
         try:
             if isinstance(content , NavigableString):
@@ -73,7 +84,7 @@ class ParseBlog:
                 h_text = '\n'
                 #简单快速的完成#的复制，使用lambda表达式
                 h_text += (lambda s : s*(int(['h1', 'h2', 'h3', 'h4', 'h5', 'h6'].index(item.name))+1))('#')
-                h_text += item.text + '\n'#加上原来h1的内容
+                h_text += item.text.strip() + '\n'#加上原来h1的内容
                 item.replace_with(h_text)
 
             #<a
@@ -88,7 +99,10 @@ class ParseBlog:
                 if  item.attrs.get('title',None) != None:
                     a_text += '"' + item.attrs['title'] + '"'
                 a_text += ')'
-                item.replace_with(a_text)
+                if item.attrs['href'] or item.text:
+                    item.replace_with(a_text)
+                else:
+                    item.unwrap()
             #<img
             if item.name.lower() == 'img':
                 img_text = ''
@@ -111,12 +125,12 @@ class ParseBlog:
                 if self.nobr == True:
                     p_text = '\n'
                 else:
-                    p_text = '<br>'
+                    p_text = '<br/>'
                 self.comm(item, p_text)
             #<br>
             if item.name.lower() == 'br':
                 if self.nobr == False:
-                    br_text = '<br>'
+                    br_text = '<br/>'
                 else:
                     br_text = '\n'
                 item.replace_with(br_text)
@@ -124,14 +138,13 @@ class ParseBlog:
             if item.name.lower() == 'span':
                 span_text = ''
                 self.comm(item, span_text)
-            #<strong or <em
-            if item.name.lower() == 'strong' or item.name.lower() == 'em':
-                ss = (lambda s : s*(int(['strong', 'em'].index(item.name.lower()))+1))('*')
+            #<em or <strong
+            if item.name.lower() == 'em' or item.name.lower() == 'strong':
+                ss = (lambda s : s*(int(['em', 'strong'].index(item.name.lower()))+1))('_')
                 strong_text = ss + '%s' + ss
                 try:
                     item.replace_with(strong_text % (item.decode_contents()).encode('utf-8'))
                 except Exception, e:
-                    print 'from strong'
                     print item.decode_contents()
                     print item
                     print type(e)
@@ -160,6 +173,10 @@ class ParseBlog:
                         item.replace_with('\n' + li_text + item.decode_contents())
                 except Exception, e:
                     pass
+            #<div
+            if item.name.lower() == "div":
+                self.parseNode(item)
+                item.unwrap()
 
         except Exception, e:
             print item
@@ -177,14 +194,28 @@ class ParseBlog:
         except Exception, e:
             pass
 
+    def unescape_html(self, tt1):
+        # while a = re.search('&[amp;]+',tt1) or b = re.search('&gt;',tt1) or c = re.search('&lt;',tt1) or d = re.search('(?<![\\\])\*',tt1):
+        while re.search('&[amp;]+',tt1) or re.search('&gt;',tt1) or re.search('&lt;',tt1) or re.search('(?<![\\\])\*',tt1):
+            a = re.search('&[amp;]+',tt1)
+            b = re.search('&gt;',tt1)
+            c = re.search('&lt;',tt1)
+            d = re.search('(?<![\\\])\*',tt1)
+            if a:
+                tt1 = re.sub('&[amp;]+','&',tt1)
+            if b:
+                tt1 = re.sub('&gt;','>',tt1)
+            if c:
+                tt1 = re.sub('&lt;','<',tt1)
+            if d:
+                tt1 = re.sub('(?<![\\\])\*','\*',tt1)
+        return tt1
+
     def save2md(self):
-        head = '''title: '%s'\ndate: %s\ntags:\n- %s\ncategories:\n- %s\n---''' % (self.title, self.time, '\n- '.join(self.tag), '\n- '.join(self.category))
+        head = self.setHead()
         f = file((self.title + '.md'), 'w')
         tt = self.soup.find('div', class_="article_content").decode_contents()
-        h = HTMLParser.HTMLParser()
-        f.write( h.unescape(h.unescape(h.unescape((head + (self.soup.find('div', class_="article_content").decode_contents()))))).encode('utf-8'))
-        print type(tt)
-        print type(str(self.soup.find('div', class_="article_content")))
-        # f.write(str(self.soup.find('div', class_="article_content")))
+        tt = self.unescape_html(tt)
+        f.write(head.encode('utf-8') + tt.encode('utf-8'))
         f.close()
-        print 'save complite---------------------------------------'
+        print '%s    转换完毕' % (self.title).encode('utf-8')

@@ -4,7 +4,7 @@
 
 from bs4 import BeautifulSoup as bs
 import urllib2 , re , random , Queue
-import sys
+import sys,time
 from ParseBlog import ParseBlog
 
 # print sys.getdefaultencoding()
@@ -52,6 +52,7 @@ class BlogSpider:
         self.getList()  #获取所有的博客地址和文章标题
         print "列表抓取成功，总共获取%d篇文章" % BlogSpider.totalNum
         # BlogSpider.url_list = [('建立HBase的集群和HDInsight在Hadoop中使用Hive来查询它们' , 'http://blog.csdn.net/jackroyal/article/details/41442157')]
+        # BlogSpider.url_list = [('建立HBase的集群和HDInsight在Hadoop中使用Hive来查询它们' , 'http://blog.csdn.net/jackroyal/article/details/41493489')]
         self.parseBlog()
 
 
@@ -73,43 +74,27 @@ class BlogSpider:
             self.parseUrlList()
         if BlogSpider.runNum > 1:
             for x in xrange(2,BlogSpider.runNum+1):
-                print "http://blog.csdn.net/yangzhenping/article/list/" + str(x) +"?viewmode=contents"
-                print len(BlogSpider.url_list)
                 #此处添加?viewmode=contents可以使每页读取更多的列表，每页50条，不使用这个，每页只能读取20条
                 self.spider = CsdnSpider("http://blog.csdn.net/yangzhenping/article/list/" + str(x) +"?viewmode=contents")
                 self.parseUrlList()
-            print "now x is %d" % x
-            print len(BlogSpider.url_list)
-
 
         elif BlogSpider.runNum == 0:
             return
     def parseUrlList(self):
         listarr = self.spider.soup.find('div', class_="list_item_new").find_all('span',class_="link_title")
-        print "list arr is %d" % len(listarr)
         for ite in listarr:
             BlogSpider.url_list.append((ite.find('a').get_text().strip(), BlogSpider.url_prefix+ite.find('a').get('href')))
 
     def parseBlog(self):
         if len(BlogSpider.url_list) > 0:
             for x in BlogSpider.url_list:
-                print BlogSpider.url_prefix + x[1]
                 self.spider = CsdnSpider(x[1])
-                print self.spider.soup.title
                 self.parse = ParseBlog(self.spider.soup)
+                wait_time = random.randint(1,10)
+                print '随机等待%d秒' % wait_time
+                time.sleep(wait_time)
         else:
             print "博客列表为空，可是列表抓取失败或者新博客无内容"
-
-
-    def hasNext(self):
-        pass
-
-
-
-
-
-
-
 
 # print agent
 # soup = bs(response.read())
