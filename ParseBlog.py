@@ -3,7 +3,7 @@
 # Filename: ParseBlog.py
 
 from bs4 import BeautifulSoup as bs
-import re
+import re, HTMLParser
 from bs4 import NavigableString
 
 class ParseBlog:
@@ -181,7 +181,8 @@ class ParseBlog:
         head = '''title: '%s'\ndate: %s\ntags:\n- %s\ncategories:\n- %s\n---''' % (self.title, self.time, '\n- '.join(self.tag), '\n- '.join(self.category))
         f = file((self.title + '.md'), 'w')
         tt = self.soup.find('div', class_="article_content").decode_contents()
-        f.write(head.encode('utf-8') + (self.soup.find('div', class_="article_content").decode_contents()).encode('utf-8'))
+        h = HTMLParser.HTMLParser()
+        f.write( h.unescape(h.unescape(h.unescape((head + (self.soup.find('div', class_="article_content").decode_contents()))))).encode('utf-8'))
         print type(tt)
         print type(str(self.soup.find('div', class_="article_content")))
         # f.write(str(self.soup.find('div', class_="article_content")))
