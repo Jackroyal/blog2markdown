@@ -3,7 +3,7 @@
 # Filename: ParseBlog.py
 
 from bs4 import BeautifulSoup as bs
-import re
+import re,os
 from bs4 import NavigableString
 
 class ParseBlog:
@@ -17,6 +17,8 @@ class ParseBlog:
         self.category = self.setCategory()
         self.tag = self.setTag()
         self.content = self.setContent()
+        self.path = 'output'
+        self.mkdir(self.path)
         self.save2md()
 
     def setTitle(self):
@@ -211,9 +213,20 @@ class ParseBlog:
                 tt1 = re.sub('(?<![\\\])\*','\*',tt1)
         return tt1
 
+    def mkdir(self, path="output"):
+        if os.path.exists(path):
+            #如果目录存在,那就什么也不做
+            pass
+        else:
+            try:
+                os.makedirs(path)
+            except OSError, why:
+                print "目录创建Faild: %s " % str(why)
+                exit()
+
     def save2md(self):
         head = self.setHead()
-        f = file((self.title + '.md'), 'w')
+        f = file((self.path + '/' + self.title + '.md'), 'w+')
         tt = self.soup.find('div', class_="article_content").decode_contents()
         tt = self.unescape_html(tt)
         f.write(head.encode('utf-8') + tt.encode('utf-8'))

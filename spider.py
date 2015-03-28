@@ -6,6 +6,7 @@ from bs4 import BeautifulSoup as bs
 import urllib2 , re , random , Queue
 import sys,time
 from ParseBlog import ParseBlog
+import ConfigParser,string
 
 # print sys.getdefaultencoding()
 class CsdnSpider:
@@ -33,7 +34,11 @@ class CsdnSpider:
         req.add_header('Accept','*/*')
         req.add_header('Referer',self.url)
         req.add_header('GET',self.url)
-        response = urllib2.urlopen(req)
+        try:
+            response = urllib2.urlopen(req)
+        except urllib2.URLError:
+            print 'url参数请不要加单引号或者双引号'
+            exit()
         self.soup = bs(response.read())
 
 
@@ -45,16 +50,24 @@ class BlogSpider:
     flag = 0       #程序游标
     url_list = []   #url_list地址列表
     url_prefix = "http://blog.csdn.net"   #网址前缀
-    def __init__(self, url):
-        self.url = url
+    def __init__(self):
+        self.onInit() #参数配置的初始化,从spider.conf中读取
         self.spider = CsdnSpider(self.url)
         self.setNum()   #设定循环次数和总文章数目
         self.getList()  #获取所有的博客地址和文章标题
         print "列表抓取成功，总共获取%d篇文章" % BlogSpider.totalNum
-        # BlogSpider.url_list = [('建立HBase的集群和HDInsight在Hadoop中使用Hive来查询它们' , 'http://blog.csdn.net/jackroyal/article/details/41442157')]
-        # BlogSpider.url_list = [('建立HBase的集群和HDInsight在Hadoop中使用Hive来查询它们' , 'http://blog.csdn.net/jackroyal/article/details/41493489')]
         self.parseBlog()
 
+    def onInit(self):
+            cf = ConfigParser.ConfigParser()
+            cf.read('spider.conf')
+            #此处如果配置文件不存在也不会报错,所以我们判断url能不能读出来,来判断文件存在与否或者配置是否正确
+            try:
+                self.url = str(cf.get('blog', 'url'))
+                self.wait_time = cf.get('setting', 'wait_time')
+            except NameError:
+                print "你还没有配置你的配置文件,请按照如下示例重新配置spider.conf\r\n[blog]\r\nurl=\"http://blog.csdn.net/jackroyal\"\r\n[setting]\r\nwait_time=10\r\n"
+                exit()
 
     def setNum(self):
         tt = self.spider.soup.find('div', class_="pagelist")
@@ -66,7 +79,7 @@ class BlogSpider:
             BlogSpider.runNum = int(match[0][1])
         else:
             tt = self.spider.soup.find('div', id="article_list")
-            BlogSpider.totalNum = len(tt.find_all('div', class_ = "list_item list_view"))
+            BlogSpider.totalNum = len(tt.find_all('div', class_ = "article_title"))
             BlogSpider.runNum = 1
 
     def getList(self):
@@ -75,7 +88,7 @@ class BlogSpider:
         if BlogSpider.runNum > 1:
             for x in xrange(2,BlogSpider.runNum+1):
                 #此处添加?viewmode=contents可以使每页读取更多的列表，每页50条，不使用这个，每页只能读取20条
-                self.spider = CsdnSpider("http://blog.csdn.net/yangzhenping/article/list/" + str(x) +"?viewmode=contents")
+                self.spider = CsdnSpider(self.url + str(x) +"?viewmode=contents")
                 self.parseUrlList()
 
         elif BlogSpider.runNum == 0:
@@ -90,27 +103,12 @@ class BlogSpider:
             for x in BlogSpider.url_list:
                 self.spider = CsdnSpider(x[1])
                 self.parse = ParseBlog(self.spider.soup)
-                wait_time = random.randint(1,10)
+                wait_time = random.randint(1,int(self.wait_time))
                 print '随机等待%d秒' % wait_time
                 time.sleep(wait_time)
         else:
             print "博客列表为空，可是列表抓取失败或者新博客无内容"
 
-# print agent
-# soup = bs(response.read())
-
-# (soup.find('div',class_="list_item_new")).find_all('a', title=False, target=False)
-
-# soup.find_all('a', text=re.compile(U"下一页"))
-# #content = urllib2.urlopen('http://blog.csdn.net/yangzhenping?viewmode=contents').read()
-# #print content
-
-# time.sleep(10)
-# print soup.find_all('a')[10].get_text()
 
 if __name__ == '__main__':
-    url = "http://blog.csdn.net/jackroyal?viewmode=contents"
-    blog = BlogSpider(url)
-    #print blog.url_list
-    #print BlogSpider.url_list
-    #print blog.soup.title
+    blog = BlogSpider()
