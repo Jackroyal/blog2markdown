@@ -3,7 +3,6 @@
 # Filename: ParseBlog.py
 
 from bs4 import BeautifulSoup as bs
-from bs4 import UnicodeDammit
 import re,os
 from bs4 import NavigableString
 

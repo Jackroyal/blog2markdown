@@ -3,7 +3,6 @@
 # Filename: spider.py
 
 from bs4 import BeautifulSoup as bs
-from bs4 import UnicodeDammit
 import urllib2 , re , random , Queue
 import sys,time
 from ParseBlog import ParseBlog
@@ -40,7 +39,8 @@ class CsdnSpider:
         except urllib2.URLError:
             print 'url参数请不要加单引号或者双引号'
             exit()
-        self.soup = bs((response.read()).decode('utf-8').encode('utf-8'), from_encoding='utf-8')
+        #win下乱码的关键在这里,beautifulsoup解析的编码不对,我们这里直接指定编码
+        self.soup = bs((response.read()), from_encoding='utf-8')
 
 
 
