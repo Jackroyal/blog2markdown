@@ -18,7 +18,7 @@
 ###依赖库
 爬虫使用了`beautifulsoup  4.3.2`
 [点我点我](http://www.crummy.com/software/BeautifulSoup/)
-你不需要安装这个才可以正常使用
+你必须安装这个才可以正常使用
 
 ###Usage:
 
