@@ -15,6 +15,11 @@
 对table的支持不好
 中文文件名可能会有问题
 
+###依赖库
+爬虫使用了`beautifulsoup  4.3.2`
+[点我点我](http://www.crummy.com/software/BeautifulSoup/)
+你不需要安装这个才可以正常使用
+
 ###Usage:
 
 #### 首先,编辑配置文件`spider.conf`
