@@ -37,7 +37,7 @@ class CsdnSpider:
         try:
             response = urllib2.urlopen(req)
         except urllib2.URLError:
-            print 'url参数请不要加单引号或者双引号'
+            print 'url参数请不要加单引号或者双引号'.decode('utf-8')
             exit()
         #win下乱码的关键在这里,beautifulsoup解析的编码不对,我们这里直接指定编码
         self.soup = bs((response.read()), from_encoding='utf-8')
@@ -57,7 +57,7 @@ class BlogSpider:
         self.spider = CsdnSpider(self.url)
         self.setNum()   #设定循环次数和总文章数目
         self.getList()  #获取所有的博客地址和文章标题
-        print "列表抓取成功，总共获取%d篇文章" % BlogSpider.totalNum
+        print "列表抓取成功，总共获取%d篇文章".decode('utf-8') % BlogSpider.totalNum
         self.parseBlog()
 
     def onInit(self):
@@ -68,7 +68,7 @@ class BlogSpider:
                 self.url = str(cf.get('blog', 'url'))
                 self.wait_time = cf.get('setting', 'wait_time')
             except NameError:
-                print "你还没有配置你的配置文件,请按照如下示例重新配置spider.conf\r\n[blog]\r\nurl=\"http://blog.csdn.net/jackroyal\"\r\n[setting]\r\nwait_time=10\r\n"
+                print "你还没有配置你的配置文件,请按照如下示例重新配置spider.conf\r\n[blog]\r\nurl=\"http://blog.csdn.net/jackroyal\"\r\n[setting]\r\nwait_time=10\r\n".decode('utf-8')
                 exit()
 
     def setNum(self):
@@ -103,17 +103,17 @@ class BlogSpider:
     def parseBlog(self):
         if len(BlogSpider.url_list) > 0:
             for x in BlogSpider.url_list:
-                print '正在抓取第%d篇 ' % (int(BlogSpider.url_list.index(x)) + 1),
+                print '正在抓取第%d篇 '.decode('utf-8') % (int(BlogSpider.url_list.index(x)) + 1),
                 self.spider = CsdnSpider(x[1])
                 self.parse = ParseBlog(self.spider.soup)
 
                 wait_time = random.randint(1,int(self.wait_time))
-                print '随机等待%d秒' % wait_time
+                print '随机等待%d秒'.decode('utf-8') % wait_time
                 time.sleep(wait_time)
             else:
-                print "全部%d篇文章抓取完成,有bug请去https://github.com/Jackroyal/blog2markdown提交" % self.totalNum
+                print "全部%d篇文章抓取完成,有bug请去https://github.com/Jackroyal/blog2markdown提交".decode('utf-8') % self.totalNum
         else:
-            print "博客列表为空，可是列表抓取失败或者新博客无内容"
+            print "博客列表为空，可是列表抓取失败或者新博客无内容".decode('utf-8')
 
 
 if __name__ == '__main__':

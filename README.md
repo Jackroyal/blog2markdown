@@ -4,6 +4,7 @@
 暂时只做了CSDN
 
 ###UPDATE:
+2015-03-29 添加了打包成exe的程序,修复cmd下乱码,win和ubuntu完美运行
 2015-03-29 连夜修复了在win下乱码的问题,删除了冗余代码
 2015-03-28 将某些参数改为从配置文件中读取,加入更多异常判断
 2014-12-15 优化标签解析功能,添加了标题,tag和category
@@ -46,3 +47,7 @@ python spider.py
 #在win下,没有权限的问题,直接执行就好了
 python spider.py
 ```
+
+#win下打包成exe
+打包好的程序放在了dist目录下
+修改spider.conf文件,执行spider.exe就可以

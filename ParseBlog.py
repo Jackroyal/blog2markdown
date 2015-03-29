@@ -3,6 +3,7 @@
 # Filename: ParseBlog.py
 
 from bs4 import BeautifulSoup as bs
+from bs4 import UnicodeDammit
 import re,os
 from bs4 import NavigableString
 
@@ -238,4 +239,4 @@ class ParseBlog:
         tt = self.unescape_html(tt)
         f.write(head.encode('utf-8') + tt.encode('utf-8'))
         f.close()
-        print '%s    转换完毕' % (self.title).encode('utf-8')
+        print '%s    转换完毕'.decode('utf-8') % (self.title)
