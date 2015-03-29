@@ -3,6 +3,7 @@
 # Filename: spider.py
 
 from bs4 import BeautifulSoup as bs
+from bs4 import UnicodeDammit
 import urllib2 , re , random , Queue
 import sys,time
 from ParseBlog import ParseBlog
@@ -39,7 +40,8 @@ class CsdnSpider:
         except urllib2.URLError:
             print 'url参数请不要加单引号或者双引号'
             exit()
-        self.soup = bs(response.read())
+        self.soup = bs((response.read()).decode('utf-8').encode('utf-8'), from_encoding='utf-8')
+
 
 
 class BlogSpider:
@@ -101,11 +103,15 @@ class BlogSpider:
     def parseBlog(self):
         if len(BlogSpider.url_list) > 0:
             for x in BlogSpider.url_list:
+                print '正在抓取第%d篇 ' % (int(BlogSpider.url_list.index(x)) + 1),
                 self.spider = CsdnSpider(x[1])
                 self.parse = ParseBlog(self.spider.soup)
+
                 wait_time = random.randint(1,int(self.wait_time))
                 print '随机等待%d秒' % wait_time
                 time.sleep(wait_time)
+            else:
+                print "全部%d篇文章抓取完成,有bug请去https://github.com/Jackroyal/blog2markdown提交" % self.totalNum
         else:
             print "博客列表为空，可是列表抓取失败或者新博客无内容"
 

@@ -3,6 +3,7 @@
 # Filename: ParseBlog.py
 
 from bs4 import BeautifulSoup as bs
+from bs4 import UnicodeDammit
 import re,os
 from bs4 import NavigableString
 
@@ -224,9 +225,16 @@ class ParseBlog:
                 print "目录创建Faild: %s " % str(why)
                 exit()
 
+    def validateTitle(self, title):
+        rstr = r"[\/\\\:\*\?\"\<\>\|]"  # 在win中文件名不允许出现'/\:*?"<>|'
+        new_title = re.sub(rstr, "", title)
+        return new_title
+
     def save2md(self):
         head = self.setHead()
-        f = file((self.path + '/' + self.title + '.md'), 'w+')
+        filename =  self.validateTitle(self.title) + '.md'
+        f = open(self.path + os.path.sep  + filename, 'w+')
+
         tt = self.soup.find('div', class_="article_content").decode_contents()
         tt = self.unescape_html(tt)
         f.write(head.encode('utf-8') + tt.encode('utf-8'))
